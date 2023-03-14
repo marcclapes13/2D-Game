@@ -34,6 +34,7 @@ public:
 	int animation() const;
 	
 	void setPosition(const glm::vec2 &pos);
+	glm::vec2 position;
 
 private:
 	Texture *texture;
@@ -41,7 +42,7 @@ private:
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
-	glm::vec2 position;
+	
 	int currentAnimation, currentKeyframe;
 	float timeAnimation;
 	glm::vec2 texCoordDispl;

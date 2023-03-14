@@ -7,6 +7,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Play.h"
+#include "Menu.h"
 
 
 // Scene contains all the entities of our game.
@@ -18,6 +19,8 @@ class Scene
 
 public:
 
+	enum class State { MENU, PLAY };
+
 	Scene();
 	~Scene();
 
@@ -28,12 +31,20 @@ public:
 private:
 	
 	void initPlay();
+	void initMenu();
 	void updatePlay(int deltaTime);
+	void updateMenu(int deltaTime);
 	void renderPlay();
+	void renderMenu();
+
+	inline void updateState();
 
 private:
 
+	Menu menu;
 	Play play;
+	Texture textura;
+	Scene::State state = Scene::State::PLAY;
 
 };
 

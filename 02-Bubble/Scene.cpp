@@ -25,19 +25,70 @@ Scene::~Scene()
 
 void Scene::init()
 {
-	this->initPlay();
+	switch (this->state)
+	{
+	case Scene::State::MENU:
+	{
+		this->initMenu();
+		break;
+	}
+	case Scene::State::PLAY:
+	{
+		this->initPlay();
+		break;
+	}
+	default:
+	{
+		std::cerr << "[SCENE::init] wrong game state: " << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	}
 }
 
 void Scene::update(int deltaTime)
 {
-	this->updatePlay(deltaTime);
+	this->updateState();
+	switch (this->state)
+	{
+	case Scene::State::MENU:
+	{
+		this->updateMenu(deltaTime);
+		break;
+	}
+	case Scene::State::PLAY:
+	{
+		this->updatePlay(deltaTime);
+		break;
+	}
+	default:
+	{
+		std::cerr << "[SCENE::update] wrong game state: " << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	}
 	
 }
 
 void Scene::render()
 {
-	this->renderPlay();
-	
+	switch (this->state)
+	{
+	case Scene::State::MENU:
+	{
+		this->renderMenu();
+		break;
+	}
+	case Scene::State::PLAY:
+	{
+		this->renderPlay();
+		break;
+	}
+	default:
+	{
+		std::cerr << "[SCENE::render] wrong game state: " << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	}
 }
 
 void Scene::initPlay()
@@ -45,9 +96,19 @@ void Scene::initPlay()
 	this->play.init();
 }
 
+void Scene::initMenu()
+{
+	this->menu.init();
+}
+
 void Scene::updatePlay(int deltaTime)
 {
 	this->play.update(deltaTime);
+
+}
+void Scene::updateMenu(int deltaTime)
+{
+	this->menu.update(deltaTime);
 
 }
 
@@ -55,6 +116,25 @@ void Scene::renderPlay()
 {
 	this->play.render();
 
+}
+void Scene::renderMenu()
+{
+	this->menu.render();
+
+}
+inline void Scene::updateState()
+{
+	if (this-> state == Scene::State::PLAY && Game::instance().getSpecialKey(GLUT_KEY_F1))
+	{
+		this->state = Scene::State::MENU;
+		this->init();
+	}
+
+	else if (this->state == Scene::State::MENU && Game::instance().getSpecialKey(GLUT_KEY_F1))
+	{
+		this->state = Scene::State::PLAY;
+		this->init();
+	}
 }
 
 
