@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "Game.h"
 #include "Play.h"
+#include "Level.h"
 
 #define SCREEN_X 32
 #define SCREEN_Y 16
@@ -27,14 +28,42 @@ Play::~Play()
 
 void Play::init()
 {
-	initShaders();
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setTileMap(map);
-	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
-	currentTime = 0.0f;
+
+		this->initShaders();
+		switch (level)
+		{
+		case 1:
+		{
+			cout << "level1" << endl;
+			this->state = Play::State::LEVEL1;
+			map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+			break;
+		}
+		case 2:
+		{
+			this->state = Play::State::LEVEL2;
+			map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+			break;
+		}
+		case 3:
+		{
+			this->state = Play::State::LEVEL3;
+			break;
+		}
+		default:
+		{
+			std::cerr << "[PLAY::init] wrong level number" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+		
+		}
+		
+		player = new Player();
+		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		player->setTileMap(map);
+		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+		currentTime = 0.0f;
 
 }
 
@@ -42,6 +71,7 @@ void Play::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+
 }
 
 void Play::render()
@@ -86,4 +116,22 @@ void Play::initShaders()
 	texProgram.bindFragmentOutput("outColor");
 	vShader.free();
 	fShader.free();
+}
+inline void Play::updateState()
+{
+	if (this->state == Play::State::LEVEL1 && Game::instance().getSpecialKey(GLUT_KEY_F4))
+	{
+		cout << "aqui" << endl;
+		this->state = Play::State::LEVEL2;
+		level = 2;
+		this->init();
+	}
+
+	else if (this->state == Play::State::LEVEL2 && Game::instance().getSpecialKey(GLUT_KEY_F5))
+	{
+
+		this->state = Play::State::LEVEL1;
+		level = 1;
+		this->init();
+	}
 }

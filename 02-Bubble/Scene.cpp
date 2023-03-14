@@ -126,14 +126,16 @@ inline void Scene::updateState()
 {
 	if (this-> state == Scene::State::PLAY && Game::instance().getSpecialKey(GLUT_KEY_F1))
 	{
+		
 		this->state = Scene::State::MENU;
-		this->init();
+		this->initMenu();
 	}
 
 	else if (this->state == Scene::State::MENU && Game::instance().getSpecialKey(GLUT_KEY_F1))
 	{
+
 		this->state = Scene::State::PLAY;
-		this->init();
+		this->initPlay();
 	}
 }
 

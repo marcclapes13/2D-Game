@@ -4,13 +4,15 @@
 #include "TileMap.h"
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
-
+#include "Level.h"
 #include "Player.h"
 
 
 class Play
 {
-
+public: 
+	enum class State { LEVEL1, LEVEL2, LEVEL3 };
+	
 
 public:
 
@@ -24,10 +26,15 @@ public:
 
 private:
 	void initShaders();
+	inline void updateState();
 	
 
 private:
 
+	Play::State state;
+
+	Level levels;
+	int level = 1;
 	TileMap* map;
 	Player* player;
 	ShaderProgram texProgram;

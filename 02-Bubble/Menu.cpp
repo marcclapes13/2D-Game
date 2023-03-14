@@ -20,6 +20,7 @@ Menu::~Menu()
 
 void Menu::init() {
 	this->initShader();
+	projection = glm::ortho(0.f, float(480 - 1), float(480 - 1), 0.f);
 	this->textureMenu.loadFromFile("images/fondo1.png", TEXTURE_PIXEL_FORMAT_RGB);
 	this->spriteMenu = Sprite::createSprite(glm::ivec2(650, 500), glm::vec2(1.f, 1.f), &this->textureMenu, &this->shader);
 	this->spriteMenu->setNumberAnimations(1);
@@ -35,6 +36,14 @@ void Menu::update(int deltaTime)
 }
 void Menu::render()
 {
+	glm::mat4 modelview;
+
+	this->shader.use();
+	this->shader.setUniformMatrix4f("projection", projection);
+	this->shader.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	modelview = glm::mat4(1.0f);
+	this->shader.setUniformMatrix4f("modelview", modelview);
+	this->shader.setUniform2f("texCoordDispl", 0.f, 0.f);
 	this->spriteMenu->render();
 
 }

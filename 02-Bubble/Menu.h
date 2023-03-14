@@ -47,7 +47,7 @@ private:
 	Texture textureControls;
 	Texture textureCredits;
 	Texture textureCongrats;
-
+	glm::mat4 projection;
 	ShaderProgram shader;
 	Texture scene;
 	glm::vec2 selectorPos = glm::vec2(480.f / 7.f, 235.f);

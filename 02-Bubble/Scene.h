@@ -44,7 +44,7 @@ private:
 	Menu menu;
 	Play play;
 	Texture textura;
-	Scene::State state = Scene::State::PLAY;
+	Scene::State state = Scene::State::MENU;
 
 };
 
