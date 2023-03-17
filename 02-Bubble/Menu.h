@@ -18,7 +18,7 @@
 class Menu
 {
 public:
-
+	enum class State { MENU, CONTR, CRED, END };
 
 public:
 
@@ -33,9 +33,26 @@ private:
 
 	void initShader();
 
+	void initMenu();
+	void updateMenu(int deltaTime);
+	void renderMenu();
+
+	void initControls();
+	void updateControls(int deltaTime);
+	void renderControls();
+
+	void initCredits();
+	void updateCredits(int deltaTime);
+	void renderCredits();
+
+	void initEnd();
+	void updateEnd(int deltaTime);
+	void renderEnd();
+
+
 private:
 
-
+	Menu::State state = Menu::State::MENU;
 	Sprite* spriteMenu;
 	Sprite* spriteSelector;
 	Sprite* spriteControls;
