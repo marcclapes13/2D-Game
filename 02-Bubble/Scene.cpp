@@ -124,16 +124,16 @@ void Scene::renderMenu()
 }
 inline void Scene::updateState()
 {
-	if (this-> state == Scene::State::PLAY && Game::instance().getSpecialKey(GLUT_KEY_F1))
+	if (this-> state == Scene::State::PLAY && Game::instance().getKey((char)109)) //press m
 	{
-		
+		Game::instance().keyReleased((char)109);
 		this->state = Scene::State::MENU;
 		this->initMenu();
 	}
 
-	else if (this->state == Scene::State::MENU && Game::instance().getSpecialKey(GLUT_KEY_F1))
+	else if (this->state == Scene::State::MENU && Game::instance().getKey((char)112)) //press p
 	{
-
+		Game::instance().keyReleased((char)112);
 		this->state = Scene::State::PLAY;
 		this->initPlay();
 	}
