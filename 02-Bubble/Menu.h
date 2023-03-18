@@ -29,30 +29,16 @@ public:
 	void update(int deltaTime);
 	void render();
 
+	void initControls();
+
 private:
 
 	void initShader();
-
-	void initMenu();
-	void updateMenu(int deltaTime);
-	void renderMenu();
-
-	void initControls();
-	void updateControls(int deltaTime);
-	void renderControls();
-
-	void initCredits();
-	void updateCredits(int deltaTime);
-	void renderCredits();
-
-	void initEnd();
-	void updateEnd(int deltaTime);
-	void renderEnd();
+	void initSelector();
 
 
 private:
 
-	Menu::State state = Menu::State::MENU;
 	Sprite* spriteMenu;
 	Sprite* spriteSelector;
 	Sprite* spriteControls;
@@ -67,7 +53,7 @@ private:
 	glm::mat4 projection;
 	ShaderProgram shader;
 	Texture scene;
-	glm::vec2 selectorPos = glm::vec2(480.f / 7.f, 235.f);
+	glm::vec2 selectorPos = glm::vec2(50.f, 50.f);
 };
 
 

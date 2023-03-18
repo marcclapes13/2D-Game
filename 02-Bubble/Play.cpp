@@ -121,7 +121,6 @@ inline void Play::updateState()
 {
 	if (this->state == Play::State::LEVEL1 && Game::instance().getSpecialKey(GLUT_KEY_F4))
 	{
-		cout << "aqui" << endl;
 		this->state = Play::State::LEVEL2;
 		level = 2;
 		this->init();

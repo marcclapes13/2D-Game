@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Play.h"
 #include "Menu.h"
+#include "Control.h"
 
 
 // Scene contains all the entities of our game.
@@ -19,7 +20,7 @@ class Scene
 
 public:
 
-	enum class State { MENU, PLAY };
+	enum class State { MENU, PLAY, CONTR};
 
 	Scene();
 	~Scene();
@@ -32,10 +33,14 @@ private:
 	
 	void initPlay();
 	void initMenu();
+	void initSelector();
+	void initContr();
 	void updatePlay(int deltaTime);
 	void updateMenu(int deltaTime);
+	void updateContr(int deltaTime);
 	void renderPlay();
 	void renderMenu();
+	void renderContr();
 
 	inline void updateState();
 
@@ -43,6 +48,7 @@ private:
 
 	Menu menu;
 	Play play;
+	Control contr;
 	Texture textura;
 	Scene::State state = Scene::State::MENU;
 

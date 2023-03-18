@@ -4,13 +4,11 @@
 #include "Scene.h"
 #include "Game.h"
 
-
 #define SCREEN_X 32
 #define SCREEN_Y 16
 
 #define INIT_PLAYER_X_TILES 4
 #define INIT_PLAYER_Y_TILES 25
-
 
 Scene::Scene()
 {
@@ -30,11 +28,17 @@ void Scene::init()
 	case Scene::State::MENU:
 	{
 		this->initMenu();
+
 		break;
 	}
 	case Scene::State::PLAY:
 	{
 		this->initPlay();
+		break;
+	}
+	case Scene::State::CONTR:
+	{
+		this->initContr();
 		break;
 	}
 	default:
@@ -60,6 +64,11 @@ void Scene::update(int deltaTime)
 		this->updatePlay(deltaTime);
 		break;
 	}
+	case Scene::State::CONTR:
+	{
+		this->updateContr(deltaTime);
+		break;
+	}
 	default:
 	{
 		std::cerr << "[SCENE::update] wrong game state: " << std::endl;
@@ -83,6 +92,11 @@ void Scene::render()
 		this->renderPlay();
 		break;
 	}
+	case Scene::State::CONTR:
+	{
+		this->renderContr();
+		break;
+	}
 	default:
 	{
 		std::cerr << "[SCENE::render] wrong game state: " << std::endl;
@@ -101,6 +115,12 @@ void Scene::initMenu()
 	this->menu.init();
 }
 
+void Scene::initContr()
+{
+	this->contr.init();
+}
+
+
 void Scene::updatePlay(int deltaTime)
 {
 	this->play.update(deltaTime);
@@ -109,6 +129,12 @@ void Scene::updatePlay(int deltaTime)
 void Scene::updateMenu(int deltaTime)
 {
 	this->menu.update(deltaTime);
+
+}
+
+void Scene::updateContr(int deltaTime)
+{
+	this->contr.update(deltaTime);
 
 }
 
@@ -122,20 +148,43 @@ void Scene::renderMenu()
 	this->menu.render();
 
 }
+void Scene::renderContr()
+{
+	this->contr.render();
+
+}
 inline void Scene::updateState()
 {
-	if (this-> state == Scene::State::PLAY && Game::instance().getKey((char)109)) //press m
+	if (this->state == Scene::State::PLAY && Game::instance().getKey((char)109)) //press m
 	{
 		Game::instance().keyReleased((char)109);
 		this->state = Scene::State::MENU;
 		this->initMenu();
 	}
 
-	else if (this->state == Scene::State::MENU && Game::instance().getKey((char)112)) //press p
+	else if (this->state == Scene::State::MENU)
 	{
-		Game::instance().keyReleased((char)112);
-		this->state = Scene::State::PLAY;
-		this->initPlay();
+		if (Game::instance().getKey((char)112)) //press p
+		{
+			Game::instance().keyReleased((char)112);
+			this->state = Scene::State::PLAY;
+			this->initPlay();
+		}
+		else if (Game::instance().getKey((char)99)) //press c
+		{
+			Game::instance().keyReleased((char)99);
+			this->state = Scene::State::CONTR;
+			this->initContr();
+		}
+	}
+	else if (this->state == Scene::State::CONTR)
+	{
+		if (Game::instance().getKey((char)98))
+		{
+			Game::instance().keyReleased((char)98);
+			this->state = Scene::State::MENU;
+			this->initMenu();
+		}
 	}
 }
 

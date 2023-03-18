@@ -4,84 +4,31 @@ Menu::Menu()
 {
 	this->spriteMenu = NULL;
 	this->spriteSelector = NULL;
-	this->spriteControls = NULL;
-	this->spriteCredits = NULL;
-	this->spriteCongrats = NULL;
+
 }
 
 Menu::~Menu()
 {
 	if (this->spriteMenu != NULL) delete this->spriteMenu;
 	if (this->spriteSelector != NULL) delete this->spriteSelector;
-	if (this->spriteControls != NULL) delete this->spriteControls;
-	if (this->spriteCredits != NULL) delete this->spriteCredits;
-	if (this->spriteCongrats != NULL) delete this->spriteCongrats;
+
 }
 
 void Menu::init() {
 
 	this->initShader();
+	projection = glm::ortho(0.f, float(800), float(750), 0.f);
+	this->textureMenu.loadFromFile("images/menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	this->spriteMenu = Sprite::createSprite(glm::ivec2(800, 750), glm::vec2(1.f, 1.f), &this->textureMenu, &this->shader);
+	this->spriteMenu->setNumberAnimations(0);
+	this->spriteMenu->setPosition(glm::vec2(0.f, 0.f));
 
-	switch (this->state)
-	{
-		case Menu::State::MENU:
-		{
-			this->initMenu();
-			break;
-		}
-		case Menu::State::CONTR:
-		{
-			this->initControls();
-			break;
-		}
-		case Menu::State::CRED:
-		{
-			this->initCredits();
-			break;
-		}
-		case Menu::State::END:
-		{
-			this->initEnd();
-			break;
-		}
-		default:
-		{
-			std::cout << "[MENU::init] wrong menu state: " << std::endl;
-			exit(EXIT_FAILURE);
-		}
-	}
 }
 
 void Menu::update(int deltaTime)
 {
-	switch (this->state)
-	{
-		case Menu::State::MENU:
-		{
-			this->updateMenu(deltaTime);
-			break;
-		}
-		case Menu::State::CONTR:
-		{
-			this->updateControls(deltaTime);
-			break;
-		}
-		case Menu::State::CRED:
-		{
-			this->updateCredits(deltaTime);
-			break;
-		}
-		case Menu::State::END:
-		{
-			this->updateEnd(deltaTime);
-			break;
-		}
-		default:
-		{
-			std::cerr << "[MENU::update] wrong menu state: " << std::endl;
-			exit(EXIT_FAILURE);
-		}
-	}
+
+	this->spriteMenu->update(deltaTime);
 }
 void Menu::render()
 {
@@ -95,68 +42,9 @@ void Menu::render()
 	this->shader.setUniform2f("texCoordDispl", 0.f, 0.f);
 	this->spriteMenu->render();
 
-	switch (this->state)
-	{
-		case Menu::State::MENU:
-		{
-			this->renderMenu();
-			break;
-		}
-		case Menu::State::CONTR:
-		{
-			this->renderControls();
-			break;
-		}
-		case Menu::State::CRED:
-		{
-			this->renderCredits();
-			break;
-		}
-		case Menu::State::END:
-		{
-			this->renderEnd();
-			break;
-		}
-		default:
-		{
-			std::cerr << "[MENU::render] wrong menu state: " << endl;
-			exit(EXIT_FAILURE);
-		}
-	}
-}
-
-void Menu::initMenu() {
-	projection = glm::ortho(0.f, float(800), float(750), 0.f);
-	this->textureMenu.loadFromFile("images/menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	this->spriteMenu = Sprite::createSprite(glm::ivec2(800, 750), glm::vec2(1.f, 1.f), &this->textureMenu, &this->shader);
-	this->spriteMenu->setNumberAnimations(1);
-	this->spriteMenu->setPosition(glm::vec2(0.f, 0.f));
-	this->textureMenu.setWrapS(GL_CLAMP_TO_EDGE);
-	this->textureMenu.setWrapT(GL_CLAMP_TO_EDGE);
-	this->textureMenu.setMinFilter(GL_NEAREST);
-	this->textureMenu.setMagFilter(GL_NEAREST);
-}
-void Menu::initControls() {}
-void Menu::initCredits() {}
-void Menu::initEnd() {}
-
-void Menu::updateMenu(int deltaTime) {
-
-	this->spriteMenu->update(deltaTime);
-}
-
-void Menu::updateControls(int deltaTime) {}
-void Menu::updateCredits(int deltaTime) {}
-void Menu::updateEnd(int deltaTime) {}
-
-void Menu::renderMenu() {
-
+	this->spriteSelector->render();
 	this->spriteMenu->render();
 }
-
-void Menu::renderControls() {}
-void Menu::renderCredits() {}
-void Menu::renderEnd() {}
 
 void Menu::initShader()
 {
@@ -190,4 +78,6 @@ void Menu::initShader()
 	vShader.free();
 	fShader.free();
 }
+
+
 
