@@ -41,6 +41,8 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 	Texture scene;
+	//Sprite* spriteBackground;
+	//Texture textureBackground;
 
 	ShaderProgram shader;
 

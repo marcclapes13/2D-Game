@@ -16,6 +16,7 @@ Play::Play()
 {
 	map = NULL;
 	player = NULL;
+	//spriteBackground = NULL;
 }
 
 Play::~Play()
@@ -24,12 +25,20 @@ Play::~Play()
 		delete map;
 	if (player != NULL)
 		delete player;
+	//if (spriteBackground != NULL)
+		//delete spriteBackground;
 }
 
 void Play::init()
 {
 
 		this->initShaders();
+		/*projection = glm::ortho(0.f, float(800), float(750), 0.f);
+		this->textureBackground.loadFromFile("images/menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		this->spriteBackground = Sprite::createSprite(glm::ivec2(800, 750), glm::vec2(1.f, 1.f), &this->textureBackground, &this->texProgram);
+		this->spriteBackground->setNumberAnimations(0);
+		this->spriteBackground->setPosition(glm::vec2(0.f, 0.f));
+		*/
 		switch (level)
 		{
 		case 1:
@@ -71,6 +80,7 @@ void Play::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	//spriteBackground->update(deltaTime);
 
 }
 
@@ -86,6 +96,7 @@ void Play::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	//spriteBackground->render();
 }
 
 void Play::initShaders()

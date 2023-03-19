@@ -29,21 +29,17 @@ public:
 	void update(int deltaTime);
 	void render();
 
-	void initControls();
 
 private:
 
 	void initShader();
-	void initSelector();
+
 
 
 private:
 
 	Sprite* spriteMenu;
-	Sprite* spriteSelector;
-	Sprite* spriteControls;
-	Sprite* spriteCredits;
-	Sprite* spriteCongrats;
+
 
 	Texture textureMenu;
 	Texture textureSelector;

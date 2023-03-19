@@ -3,14 +3,14 @@
 Menu::Menu()
 {
 	this->spriteMenu = NULL;
-	this->spriteSelector = NULL;
+
 
 }
 
 Menu::~Menu()
 {
 	if (this->spriteMenu != NULL) delete this->spriteMenu;
-	if (this->spriteSelector != NULL) delete this->spriteSelector;
+
 
 }
 
@@ -41,8 +41,6 @@ void Menu::render()
 	this->shader.setUniformMatrix4f("modelview", modelview);
 	this->shader.setUniform2f("texCoordDispl", 0.f, 0.f);
 	this->spriteMenu->render();
-
-	this->spriteSelector->render();
 	this->spriteMenu->render();
 }
 
