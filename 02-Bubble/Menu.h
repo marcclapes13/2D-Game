@@ -39,10 +39,11 @@ private:
 private:
 
 	Sprite* spriteMenu;
+	Sprite* cursor;
 
 
 	Texture textureMenu;
-	Texture textureSelector;
+	Texture textureCursor;
 	Texture textureControls;
 	Texture textureCredits;
 	Texture textureCongrats;

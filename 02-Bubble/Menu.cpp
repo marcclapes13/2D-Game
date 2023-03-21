@@ -22,13 +22,16 @@ void Menu::init() {
 	this->spriteMenu = Sprite::createSprite(glm::ivec2(800, 750), glm::vec2(1.f, 1.f), &this->textureMenu, &this->shader);
 	this->spriteMenu->setNumberAnimations(0);
 	this->spriteMenu->setPosition(glm::vec2(0.f, 0.f));
-
+	textureCursor.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	cursor = Sprite::createSprite(glm::ivec2(100, 100), glm::vec2(1.0f, 1.0f), &textureCursor, &shader);
+	cursor->setPosition(glm::vec2(250.0f, 300.0f));
 }
 
 void Menu::update(int deltaTime)
 {
 
 	this->spriteMenu->update(deltaTime);
+	cursor->update(deltaTime);
 }
 void Menu::render()
 {
@@ -41,7 +44,7 @@ void Menu::render()
 	this->shader.setUniformMatrix4f("modelview", modelview);
 	this->shader.setUniform2f("texCoordDispl", 0.f, 0.f);
 	this->spriteMenu->render();
-	this->spriteMenu->render();
+	cursor->render();
 }
 
 void Menu::initShader()

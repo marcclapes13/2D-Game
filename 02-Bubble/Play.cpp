@@ -37,7 +37,6 @@ void Play::init()
 		{
 		case 1:
 		{
-			cout << "level1" << endl;
 			this->state = Play::State::LEVEL1;
 			map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 			break;

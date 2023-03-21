@@ -200,6 +200,7 @@ inline void Scene::updateState()
 				this->play.setLevel(2);
 				this->play.init();
 			}
+			
 		}
 		else if (this->play.getLevel() == 2) //press 2
 		{
