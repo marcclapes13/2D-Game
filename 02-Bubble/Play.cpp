@@ -31,14 +31,8 @@ Play::~Play()
 
 void Play::init()
 {
-
 		this->initShaders();
-		/*projection = glm::ortho(0.f, float(800), float(750), 0.f);
-		this->textureBackground.loadFromFile("images/menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		this->spriteBackground = Sprite::createSprite(glm::ivec2(800, 750), glm::vec2(1.f, 1.f), &this->textureBackground, &this->texProgram);
-		this->spriteBackground->setNumberAnimations(0);
-		this->spriteBackground->setPosition(glm::vec2(0.f, 0.f));
-		*/
+
 		switch (level)
 		{
 		case 1:
@@ -96,7 +90,7 @@ void Play::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
-	//spriteBackground->render();
+
 }
 
 void Play::initShaders()
@@ -130,18 +124,26 @@ void Play::initShaders()
 }
 inline void Play::updateState()
 {
-	if (this->state == Play::State::LEVEL1 && Game::instance().getSpecialKey(GLUT_KEY_F4))
+	if (Game::instance().getKey((char)50))
 	{
 		this->state = Play::State::LEVEL2;
 		level = 2;
 		this->init();
 	}
 
-	else if (this->state == Play::State::LEVEL2 && Game::instance().getSpecialKey(GLUT_KEY_F5))
+	else if ( Game::instance().getKey((char)49))
 	{
 
 		this->state = Play::State::LEVEL1;
 		level = 1;
 		this->init();
 	}
+}
+
+int Play::getLevel() {
+	return level;
+}
+void Play::setLevel(int lev) {
+	level = lev;
+
 }

@@ -183,11 +183,33 @@ void Scene::renderCredits()
 }
 inline void Scene::updateState()
 {
-	if (this->state == Scene::State::PLAY && Game::instance().getKey((char)109)) //press m
+	if (this->state == Scene::State::PLAY) 
 	{
-		Game::instance().keyReleased((char)109);
-		this->state = Scene::State::MENU;
-		this->initMenu();
+		if (Game::instance().getKey((char)109)) //press m
+		{
+			Game::instance().keyReleased((char)109);
+			this->state = Scene::State::MENU;
+			this->initMenu();
+		}
+		else if (this->play.getLevel() == 1)
+			
+			{
+			if (Game::instance().getKey((char)50)) //press 1
+			{
+				Game::instance().keyReleased((char)50);
+				this->play.setLevel(2);
+				this->play.init();
+			}
+		}
+		else if (this->play.getLevel() == 2) //press 2
+		{
+			if (Game::instance().getKey((char)49))
+			{
+				Game::instance().keyReleased((char)50);
+				this->play.setLevel(1);
+				this->play.init();
+			}
+		}
 	}
 
 	else if (this->state == Scene::State::MENU)

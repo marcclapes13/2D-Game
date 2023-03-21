@@ -22,6 +22,9 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+
+	int getLevel();
+	void setLevel(int lev);
 	
 
 private:
@@ -41,8 +44,6 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 	Texture scene;
-	//Sprite* spriteBackground;
-	//Texture textureBackground;
 
 	ShaderProgram shader;
 
