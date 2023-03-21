@@ -41,6 +41,11 @@ void Scene::init()
 		this->initContr();
 		break;
 	}
+	case Scene::State::CRED:
+	{
+		this->initCredits();
+		break;
+	}
 	default:
 	{
 		std::cerr << "[SCENE::init] wrong game state: " << std::endl;
@@ -67,6 +72,11 @@ void Scene::update(int deltaTime)
 	case Scene::State::CONTR:
 	{
 		this->updateContr(deltaTime);
+		break;
+	}
+	case Scene::State::CRED:
+	{
+		this->updateCredits(deltaTime);
 		break;
 	}
 	default:
@@ -97,6 +107,11 @@ void Scene::render()
 		this->renderContr();
 		break;
 	}
+	case Scene::State::CRED:
+	{
+		this->renderCredits();
+		break;
+	}
 	default:
 	{
 		std::cerr << "[SCENE::render] wrong game state: " << std::endl;
@@ -120,6 +135,11 @@ void Scene::initContr()
 	this->contr.init();
 }
 
+void Scene::initCredits()
+{
+	this->credits.init();
+}
+
 
 void Scene::updatePlay(int deltaTime)
 {
@@ -137,6 +157,11 @@ void Scene::updateContr(int deltaTime)
 	this->contr.update(deltaTime);
 
 }
+void Scene::updateCredits(int deltaTime)
+{
+	this->credits.update(deltaTime);
+
+}
 
 void Scene::renderPlay()
 {
@@ -151,7 +176,10 @@ void Scene::renderMenu()
 void Scene::renderContr()
 {
 	this->contr.render();
-
+}
+void Scene::renderCredits()
+{
+	this->credits.render();
 }
 inline void Scene::updateState()
 {
@@ -176,8 +204,23 @@ inline void Scene::updateState()
 			this->state = Scene::State::CONTR;
 			this->initContr();
 		}
+		else if (Game::instance().getKey((char)114)) //press r
+		{
+			Game::instance().keyReleased((char)114);
+			this->state = Scene::State::CRED;
+			this->initCredits();
+		}
 	}
 	else if (this->state == Scene::State::CONTR)
+	{
+		if (Game::instance().getKey((char)98))
+		{
+			Game::instance().keyReleased((char)98);
+			this->state = Scene::State::MENU;
+			this->initMenu();
+		}
+	}
+	else if (this->state == Scene::State::CRED)
 	{
 		if (Game::instance().getKey((char)98))
 		{
