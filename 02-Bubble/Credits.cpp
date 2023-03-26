@@ -15,7 +15,7 @@ void Credits::init() {
 
 	this->initShader();
 	projection = glm::ortho(0.f, float(800), float(750), 0.f);
-	this->textureCredits.loadFromFile("images/credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	this->textureCredits.loadFromFile("images/Menus/credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	this->spriteCredits = Sprite::createSprite(glm::ivec2(800, 750), glm::vec2(1.f, 1.f), &this->textureCredits, &this->shader);
 	this->spriteCredits->setNumberAnimations(0);
 	this->spriteCredits->setPosition(glm::vec2(0.f, 0.f));

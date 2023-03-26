@@ -9,8 +9,15 @@
 #define SCREEN_X 32
 #define SCREEN_Y 16
 
-#define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 25
+#define INIT_PLAYER_X_TILES 8
+#define INIT_PLAYER_Y_TILES 3
+
+#define INIT_ENEMY_X_TILES 20
+#define INIT_ENEMY_Y_TILES 25
+
+#define PUÑETAZOS 0
+#define DOCTOR 1
+#define ARMADO 2
 
 Play::Play()
 {
@@ -64,15 +71,17 @@ void Play::init()
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
+		initEnemies();
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
-
 }
 
 void Play::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	for (int i = 0; i < int(enemyList.size()); ++i)
+		enemyList[i]->update(deltaTime);
 	//spriteBackground->update(deltaTime);
 
 }
@@ -89,7 +98,8 @@ void Play::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
-
+	for (int i = 0; i < int(enemyList.size()); ++i)
+		enemyList[i]->render();
 }
 
 void Play::initShaders()
@@ -145,4 +155,42 @@ int Play::getLevel() {
 void Play::setLevel(int lev) {
 	level = lev;
 
+}
+
+void Play::initEnemies() {
+	if (level == 1) {
+		int number_of_enemies = 6; //cuantos enemigos hay en el nivel
+		for (int i = 0; i < number_of_enemies; ++i) {
+			int enemy_x;
+			int enemy_y;
+			int typeofEnemy;
+			int direccio;
+			switch (i + 1) { //enemy_list
+			case 1:
+				enemy_x = 2; enemy_y = 24; typeofEnemy = PUÑETAZOS, direccio = 0;
+				break;
+			case 2:
+				enemy_x = 32; enemy_y = 24; typeofEnemy = PUÑETAZOS, direccio = 1;
+				break;
+			case 3:
+				enemy_x = 15; enemy_y = 12; typeofEnemy = DOCTOR, direccio = 0;
+				break;
+			case 4:
+				enemy_x = 19; enemy_y = 12; typeofEnemy = DOCTOR, direccio = 1;
+				break;
+			case 5:
+				enemy_x = 2; enemy_y = 8; typeofEnemy = ARMADO, direccio = 0;
+				break;
+			case 6:
+				enemy_x = 32; enemy_y = 8; typeofEnemy = ARMADO, direccio = 1;
+				break;
+			}
+			Enemy* enemy_aux;
+			enemy_aux = new Enemy();
+			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio);
+			enemy_aux->setTileMap(map);
+			enemy_aux->setPosition(glm::vec2(enemy_x * map->getTileSize(), enemy_y * map->getTileSize()));
+			enemyList.push_back(enemy_aux);
+		}
+	}
 }

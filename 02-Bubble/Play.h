@@ -6,6 +6,7 @@
 #include "ShaderProgram.h"
 #include "Level.h"
 #include "Player.h"
+#include "Enemy.h"
 
 
 class Play
@@ -25,7 +26,8 @@ public:
 
 	int getLevel();
 	void setLevel(int lev);
-	
+
+	void initEnemies();
 
 private:
 	void initShaders();
@@ -40,10 +42,13 @@ private:
 	int level = 1;
 	TileMap* map;
 	Player* player;
+	Enemy* enemy;
+	Enemy* enemy2;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
 	Texture scene;
+	vector<Enemy*> enemyList;
 
 	ShaderProgram shader;
 
