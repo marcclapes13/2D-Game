@@ -194,10 +194,16 @@ inline void Scene::updateState()
 		else if (this->play.getLevel() == 1)
 			
 			{
-			if (Game::instance().getKey((char)50)) //press 1
+			if (Game::instance().getKey((char)50)) //press 2
 			{
 				Game::instance().keyReleased((char)50);
 				this->play.setLevel(2);
+				this->play.init();
+			}
+			else if (Game::instance().getKey((char)51)) //press 3
+			{
+				Game::instance().keyReleased((char)50);
+				this->play.setLevel(3);
 				this->play.init();
 			}
 			
@@ -208,6 +214,28 @@ inline void Scene::updateState()
 			{
 				Game::instance().keyReleased((char)50);
 				this->play.setLevel(1);
+				this->play.init();
+			}
+			else if (Game::instance().getKey((char)51))
+			{
+				Game::instance().keyReleased((char)50);
+				this->play.setLevel(3);
+				this->play.init();
+			}
+			
+		}
+		else if (this->play.getLevel() == 3) //press 3
+		{
+			if (Game::instance().getKey((char)49))
+			{
+				Game::instance().keyReleased((char)50);
+				this->play.setLevel(1);
+				this->play.init();
+			}
+			else if (Game::instance().getKey((char)50))
+			{
+				Game::instance().keyReleased((char)50);
+				this->play.setLevel(2);
 				this->play.init();
 			}
 		}

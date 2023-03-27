@@ -57,6 +57,7 @@ void Play::init()
 		case 3:
 		{
 			this->state = Play::State::LEVEL3;
+			map = TileMap::createTileMap("levels/level03.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 			break;
 		}
 		default:
