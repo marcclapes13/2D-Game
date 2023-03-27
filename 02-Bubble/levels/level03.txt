@@ -1,0 +1,20 @@
+TILEMAP
+19 14 							-- Size of tile map in tiles
+16 16 							-- Tile size & block size // 16 = tamaño bloque con colision 32 = tamaño bloque total
+images/bloques.png 	-- Tilesheet
+2 2 							-- Number of tiles in tilesheet
+1111111111111111111
+1                 1
+1                 1
+1                 1
+1   2    2   2    1
+1                 1
+1                 1
+1                 1
+1                 1
+1                 1
+1  2222       222 1
+1           22    1
+1                 1
+1222222222222222221
+
