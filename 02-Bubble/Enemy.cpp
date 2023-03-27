@@ -22,7 +22,7 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 	switch (typeofEnemy) {
 	case PUÑETAZOS:
 		spritesheet.loadFromFile("images/Personatges/Puñetazos.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.33f, 0.5f), &spritesheet, &shaderProgram);
+		sprite = Sprite::createSprite(glm::ivec2(32, 48), glm::vec2(0.33f, 0.5f), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(2);
 		sprite->setAnimationSpeed(STAND_RIGHT, 8);
 		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.0f, 0.0f));
@@ -41,7 +41,7 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		break;
 	case DOCTOR:
 		spritesheet.loadFromFile("images/Personatges/Doctor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
+		sprite = Sprite::createSprite(glm::ivec2(32, 48), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(2);
 		sprite->setAnimationSpeed(STAND_RIGHT, 8);
 		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.5f, 0.0f));
@@ -60,7 +60,7 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		break;
 	case ARMADO:
 		spritesheet.loadFromFile("images/Personatges/Armado.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25f, 1.0f), &spritesheet, &shaderProgram);
+		sprite = Sprite::createSprite(glm::ivec2(32, 48), glm::vec2(0.25f, 1.0f), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(2);
 			sprite->setAnimationSpeed(STAND_RIGHT, 8);
 			sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.25f, 0.0f));
