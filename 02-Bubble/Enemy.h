@@ -28,7 +28,7 @@ public:
 	int return_type();
 
 private:
-	int typeofEnemy, health, cooldown, dir;
+	int typeofEnemy, health, cooldown, dir, transform;
 	glm::vec2 posEnemy, size, tileMapDispl;
 	Player* player;
 	Texture spritesheet;

@@ -24,8 +24,10 @@ Play::Play()
 	map = NULL;
 	player = NULL;
 	spritePuerta = NULL;
+	
 	//spriteBackground = NULL;
 }
+
 Play::~Play()
 {
 	if (map != NULL)
@@ -235,7 +237,7 @@ void Play::checkHits() {
 		bool xocaY = (((enemyList[j]->ret_pos().y + enemyList[j]->ret_size().y) >= (player->ret_pos().y)) &&
 			(((player->ret_pos().y) + player->ret_size().y) >= enemyList[j]->ret_pos().y));;
 		if (xocaX && xocaY) {
-			
+			Play();
 			this->init(level);
 		}
 		else {
@@ -244,10 +246,10 @@ void Play::checkHits() {
 				bool balaX = (((activeBullets[i]->ret_pos().x + activeBullets[i]->ret_size().x) >= player->ret_pos().x) &&
 					((player->ret_pos().x + player->ret_size().x) >= activeBullets[i]->ret_pos().x));
 				bool balaY = (((activeBullets[i]->ret_pos().y + activeBullets[i]->ret_size().y) >= (player->ret_pos().y)) &&
-					(((player->ret_pos().y) + player->ret_size().y) >= activeBullets[i]->ret_pos().y));;
+					(((player->ret_pos().y) + player->ret_size().y) >= activeBullets[i]->ret_pos().y));
 				if (balaX && balaY) {
-					
-					this->init(level);
+					Play();
+					init(level);
 					activeBullets[i]->~Bullet();
 					activeBullets.erase(activeBullets.begin() + i);
 				}

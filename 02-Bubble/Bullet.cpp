@@ -37,10 +37,10 @@ void Bullet::createBullet(float posx, float posy, int direction, ShaderProgram& 
 void Bullet::update(int deltaTime) {
 	switch (dir) {
 	case (0):
-		posBullet.x -= 5 * speed;
+		posBullet.x -= 4 * speed;
 		break;
 	case (1):
-		posBullet.x += 5 * speed;
+		posBullet.x += 4 * speed;
 		break;
 	}
 	sprite->update(deltaTime);
@@ -57,6 +57,7 @@ void Bullet::render() {
 }
 
 Bullet::~Bullet() {
+
 }
 
 glm::vec2 Bullet::ret_pos() {
