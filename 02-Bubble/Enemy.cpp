@@ -279,11 +279,12 @@ glm::vec2 Enemy::ret_pos() {
 		return glm::vec2(posEnemy.x + 32, posEnemy.y);
 		break;
 	case DOCTOR:
-		return glm::vec2(posEnemy.x+40, posEnemy.y);
+		
+		return glm::vec2(posEnemy.x+32, posEnemy.y);
 		break;
-	}
-	
+	}	
 }
+
 int Enemy::return_type() {
 	return typeofEnemy;
 }

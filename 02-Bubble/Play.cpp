@@ -30,7 +30,7 @@ Play::Play()
 		}
 	}
 	enemyList.clear();
-	//spriteBackground = NULL;
+
 }
 
 Play::~Play()
@@ -69,10 +69,12 @@ void Play::init(int i)
 		elementList.clear();
 	    level = i;
 		this->initShaders();
+		
 		switch (level)
 		{
 		case 1:
 		{
+			
 			this->state = Play::State::LEVEL1;
 			map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 			break;
@@ -99,6 +101,7 @@ void Play::init(int i)
 		}
 		
 		}
+
 		initElements();
 		player = new Player();
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -113,7 +116,7 @@ void Play::init(int i)
 void Play::update(int deltaTime)
 {
 	currentTime += deltaTime;
-
+	
 	if (!immunitat) 
 		checkHits();
 	player->update(deltaTime);
@@ -122,7 +125,7 @@ void Play::update(int deltaTime)
 	for (int i = 0; i < int(enemyList.size()); ++i)
 		enemyList[i]->update(deltaTime);
 	
-	//spriteBackground->update(deltaTime);
+
 
 }
 
@@ -138,6 +141,7 @@ void Play::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+
 	for (int i = 0; i < int(elementList.size()); ++i)
 		elementList[i]->render();
 	for (int i = 0; i < int(enemyList.size()); ++i)
@@ -272,4 +276,15 @@ void Play::checkHits() {
 			}
 		}
 	}
+	glm::ivec2 playerPos = player->ret_pos();
+	if (map->deadMoveDown(playerPos, glm::ivec2(32, 32), &playerPos.y)) {
+		init(level);
+	}
+	/*if (level == 1) {
+		if (player->ret_pos().y >= 25 * map->getTileSize() && player->ret_pos().x >= 14 * map->getTileSize() && player->ret_pos().x <= 25 * map->getTileSize()) {
+			init(level);
+		}
+	}
+	*/
+
 }

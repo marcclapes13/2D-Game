@@ -56,6 +56,8 @@ private:
 	Texture scene;
 	Texture texturePuerta;
 	Sprite* spritePuerta;
+	Texture textureBackground;
+	Sprite* spriteBackground;
 	Texture textureOver;
 	Sprite* spriteOver;
 	vector<Enemy*> enemyList;
