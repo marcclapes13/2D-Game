@@ -50,6 +50,7 @@ private:
 
 private:
 
+	bool immune = false;
 	Menu menu;
 	Play play;
 	Control contr;

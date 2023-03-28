@@ -23,6 +23,7 @@ Play::Play()
 {
 	map = NULL;
 	player = NULL;
+	spritePuerta = NULL;
 	//spriteBackground = NULL;
 }
 
@@ -32,14 +33,16 @@ Play::~Play()
 		delete map;
 	if (player != NULL)
 		delete player;
+	if (spritePuerta != NULL)
+		delete spritePuerta;
 	//if (spriteBackground != NULL)
 		//delete spriteBackground;
 }
 
-void Play::init()
+void Play::init(bool immune)
 {
 		this->initShaders();
-
+		immunitat = immune;
 		switch (level)
 		{
 		case 1:
@@ -60,6 +63,9 @@ void Play::init()
 			map = TileMap::createTileMap("levels/level03.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 			break;
 		}
+		case 4:
+			player->setPosition(glm::vec2(50, 50));
+			break;
 		default:
 		{
 			std::cerr << "[PLAY::init] wrong level number" << std::endl;
@@ -67,12 +73,13 @@ void Play::init()
 		}
 		
 		}
-		
+		initElements();
 		player = new Player();
 		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 		player->setTileMap(map);
 		initEnemies();
+		
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 		currentTime = 0.0f;
 }
@@ -80,9 +87,15 @@ void Play::init()
 void Play::update(int deltaTime)
 {
 	currentTime += deltaTime;
+
+	if (!immunitat) 
+		checkHits();
 	player->update(deltaTime);
+	for (int i = 0; i < int(elementList.size()); ++i)
+		elementList[i]->update(deltaTime);
 	for (int i = 0; i < int(enemyList.size()); ++i)
 		enemyList[i]->update(deltaTime);
+	
 	//spriteBackground->update(deltaTime);
 
 }
@@ -99,6 +112,8 @@ void Play::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	for (int i = 0; i < int(elementList.size()); ++i)
+		elementList[i]->render();
 	for (int i = 0; i < int(enemyList.size()); ++i)
 		enemyList[i]->render();
 }
@@ -138,7 +153,7 @@ inline void Play::updateState()
 	{
 		this->state = Play::State::LEVEL2;
 		level = 2;
-		this->init();
+		this->init(immunitat);
 	}
 
 	else if ( Game::instance().getKey((char)49))
@@ -146,7 +161,7 @@ inline void Play::updateState()
 
 		this->state = Play::State::LEVEL1;
 		level = 1;
-		this->init();
+		this->init(immunitat);
 	}
 }
 
@@ -188,10 +203,49 @@ void Play::initEnemies() {
 			}
 			Enemy* enemy_aux;
 			enemy_aux = new Enemy();
-			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio);
+			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio, &bulletManager);
 			enemy_aux->setTileMap(map);
 			enemy_aux->setPosition(glm::vec2(enemy_x * map->getTileSize(), enemy_y * map->getTileSize()));
 			enemyList.push_back(enemy_aux);
+		}
+	}
+}
+void Play::initElements() {
+	if (level == 1) {
+		Elements* element_aux;
+		element_aux = new Elements();
+		int element_porta = 0;
+		element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, element_porta);
+		element_aux->setTileMap(map);
+		element_aux->setPosition(glm::vec2(25 * map->getTileSize(), 5 * map->getTileSize()));
+		elementList.push_back(element_aux);
+	}
+}
+void Play::checkHits() {
+	for (int j = 0; j < int(enemyList.size()); ++j) {
+		bool xocaX = (((enemyList[j]->ret_pos().x + enemyList[j]->ret_size().x) >= player->ret_pos().x) &&
+			((player->ret_pos().x + player->ret_size().x) >= enemyList[j]->ret_pos().x));
+		bool xocaY = (((enemyList[j]->ret_pos().y + enemyList[j]->ret_size().y) >= (player->ret_pos().y)) &&
+			(((player->ret_pos().y) + player->ret_size().y) >= enemyList[j]->ret_pos().y));;
+		if (xocaX && xocaY) {
+			level = 4;
+			this->init(immunitat);
+		}
+		else {
+			vector<Bullet*> activeBullets = enemyList[j]->bulletList;
+			for (int i = 0; i < activeBullets.size(); ++i) {
+			
+				bool balaX = (((activeBullets[i]->ret_pos().x + activeBullets[i]->ret_size().x) >= player->ret_pos().x) &&
+					((player->ret_pos().x + player->ret_size().x) >= activeBullets[i]->ret_pos().x));
+				bool balaY = (((activeBullets[i]->ret_pos().y + activeBullets[i]->ret_size().y) >= (player->ret_pos().y)) &&
+					(((player->ret_pos().y) + player->ret_size().y) >= activeBullets[i]->ret_pos().y));;
+				if (balaX && balaY) {
+					level = 4;
+					this->init(immunitat);
+					activeBullets[i]->~Bullet();
+					activeBullets.erase(activeBullets.begin() + i);
+				}
+			}
 		}
 	}
 }
