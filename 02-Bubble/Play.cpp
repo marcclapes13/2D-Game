@@ -26,6 +26,7 @@ Play::Play()
 	spritePuerta = NULL;
 	//spriteBackground = NULL;
 }
+
 Play::~Play()
 {
 	if (map != NULL)
