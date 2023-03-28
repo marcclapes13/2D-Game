@@ -13,6 +13,11 @@ enum SoldierAnims
 	STAND_RIGHT, STAND_LEFT
 };
 
+Enemy::~Enemy() {
+	for (int i = 0; i < bulletList.size(); ++i) {
+		delete bulletList[i];
+	}
+}
 
 void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Player* target, int typeOf, int direccio, BulletManager* bulletManager)
 {

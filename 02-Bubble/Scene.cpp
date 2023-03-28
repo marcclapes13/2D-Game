@@ -33,7 +33,7 @@ void Scene::init()
 	}
 	case Scene::State::PLAY:
 	{
-		this->initPlay();
+		this->initPlay(1);
 		break;
 	}
 	case Scene::State::CONTR:
@@ -120,9 +120,9 @@ void Scene::render()
 	}
 }
 
-void Scene::initPlay()
+void Scene::initPlay(int level)
 {
-	this->play.init(1);
+	this->play.init(level);
 }
 
 void Scene::initMenu()
@@ -195,7 +195,7 @@ inline void Scene::updateState()
 		{
 			immune = !immune;
 			Game::instance().keyReleased((char)109);
-			this->initPlay();
+			this->initPlay(1);
 		}
 		else if (this->play.getLevel() == 1)
 			
@@ -203,14 +203,14 @@ inline void Scene::updateState()
 			if (Game::instance().getKey((char)50)) //press 2
 			{
 				Game::instance().keyReleased((char)50);
-				this->play.~Play();
-				this->play.init(2);
+				
+				this->initPlay(2);
 			}
 			else if (Game::instance().getKey((char)51)) //press 3
 			{
 				Game::instance().keyReleased((char)51);
-				this->play.~Play();
-				this->play.init(3);
+				
+				this->initPlay(3);
 			}
 			
 		}
@@ -219,14 +219,14 @@ inline void Scene::updateState()
 			if (Game::instance().getKey((char)49))
 			{
 				Game::instance().keyReleased((char)49);
-				this->play.~Play();
-				this->play.init(1);
+				
+				this->initPlay(1);
 			}
 			else if (Game::instance().getKey((char)51))
 			{
 				Game::instance().keyReleased((char)51);
-				this->play.~Play();
-				this->play.init(3);
+				
+				this->initPlay(3);
 			}
 			
 		}
@@ -235,14 +235,14 @@ inline void Scene::updateState()
 			if (Game::instance().getKey((char)49))
 			{
 				Game::instance().keyReleased((char)49);
-				this->play.~Play();
-				this->play.init(1);
+
+				this->initPlay(1);
 			}
 			else if (Game::instance().getKey((char)50))
 			{
 				Game::instance().keyReleased((char)50);
-				this->play.~Play();
-				this->play.init(2);
+				
+				this->initPlay(2);
 			}
 		}
 	}
@@ -253,7 +253,7 @@ inline void Scene::updateState()
 		{
 			Game::instance().keyReleased((char)112);
 			this->state = Scene::State::PLAY;
-			this->initPlay();
+			this->initPlay(1);
 		}
 		else if (Game::instance().getKey((char)99)) //press c
 		{

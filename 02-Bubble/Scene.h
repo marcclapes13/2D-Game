@@ -32,7 +32,7 @@ public:
 
 private:
 	
-	void initPlay();
+	void initPlay(int level);
 	void initMenu();
 	void initSelector();
 	void initContr();

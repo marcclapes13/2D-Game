@@ -57,7 +57,7 @@ void Bullet::render() {
 }
 
 Bullet::~Bullet() {
-
+	
 }
 
 glm::vec2 Bullet::ret_pos() {

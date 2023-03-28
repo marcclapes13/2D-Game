@@ -14,6 +14,8 @@ class Enemy
 {
 	
 public:
+
+	~Enemy();
 	void init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Player* target, int typeOf, int direccio, BulletManager* bulletManager);
 	void update(int deltaTime);
 	void render();

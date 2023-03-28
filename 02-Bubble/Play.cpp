@@ -24,7 +24,12 @@ Play::Play()
 	map = NULL;
 	player = NULL;
 	spritePuerta = NULL;
-	
+	for (int i = 0; i < enemyList.size(); ++i) {
+		if (enemyList[i] != NULL) {
+			enemyList[i]->~Enemy();
+		}
+	}
+	enemyList.clear();
 	//spriteBackground = NULL;
 }
 
@@ -36,13 +41,10 @@ Play::~Play()
 		delete player;
 	if (spritePuerta != NULL)
 		delete spritePuerta;
-	for (int i = 0; i < elementList.size(); ++i) {
-		if (elementList[i] != NULL)
-			delete elementList[i];
-	}
+
 	for (int i = 0; i < enemyList.size(); ++i){
 		if (enemyList[i] != NULL)
-			delete enemyList[i];
+			enemyList[i]->~Enemy();
 	}
 	//if (spriteBackground != NULL)
 		//delete spriteBackground;
@@ -50,6 +52,21 @@ Play::~Play()
 
 void Play::init(int i)
 {
+		map = NULL;
+		player = NULL;
+		spritePuerta = NULL;
+		for (int i = 0; i < enemyList.size(); ++i) {
+			if (enemyList[i] != NULL) {
+				enemyList[i]->~Enemy();
+			}
+		}
+		for (int i = 0; i < elementList.size(); ++i) {
+			if (elementList[i] != NULL) {
+				elementList[i]->~Elements();
+			}
+		}
+		enemyList.clear();
+		elementList.clear();
 	    level = i;
 		this->initShaders();
 		switch (level)
@@ -237,7 +254,6 @@ void Play::checkHits() {
 		bool xocaY = (((enemyList[j]->ret_pos().y + enemyList[j]->ret_size().y) >= (player->ret_pos().y)) &&
 			(((player->ret_pos().y) + player->ret_size().y) >= enemyList[j]->ret_pos().y));;
 		if (xocaX && xocaY) {
-			Play();
 			this->init(level);
 		}
 		else {
@@ -248,7 +264,7 @@ void Play::checkHits() {
 				bool balaY = (((activeBullets[i]->ret_pos().y + activeBullets[i]->ret_size().y) >= (player->ret_pos().y)) &&
 					(((player->ret_pos().y) + player->ret_size().y) >= activeBullets[i]->ret_pos().y));
 				if (balaX && balaY) {
-					Play();
+					
 					init(level);
 					activeBullets[i]->~Bullet();
 					activeBullets.erase(activeBullets.begin() + i);
