@@ -22,7 +22,7 @@ public:
 	Play();
 	~Play();
 
-	void init(bool immune);
+	void init(int lev);
 	void update(int deltaTime);
 	void render();
 

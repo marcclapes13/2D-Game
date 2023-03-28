@@ -122,7 +122,7 @@ void Scene::render()
 
 void Scene::initPlay()
 {
-	this->play.init(immune);
+	this->play.init(1);
 }
 
 void Scene::initMenu()
@@ -203,14 +203,14 @@ inline void Scene::updateState()
 			if (Game::instance().getKey((char)50)) //press 2
 			{
 				Game::instance().keyReleased((char)50);
-				this->play.setLevel(2);
-				this->play.init(immune);
+				this->play.~Play();
+				this->play.init(2);
 			}
 			else if (Game::instance().getKey((char)51)) //press 3
 			{
-				Game::instance().keyReleased((char)50);
-				this->play.setLevel(3);
-				this->play.init();
+				Game::instance().keyReleased((char)51);
+				this->play.~Play();
+				this->play.init(3);
 			}
 			
 		}
@@ -218,15 +218,15 @@ inline void Scene::updateState()
 		{
 			if (Game::instance().getKey((char)49))
 			{
-				Game::instance().keyReleased((char)50);
-				this->play.setLevel(1);
-				this->play.init(immune);
+				Game::instance().keyReleased((char)49);
+				this->play.~Play();
+				this->play.init(1);
 			}
 			else if (Game::instance().getKey((char)51))
 			{
-				Game::instance().keyReleased((char)50);
-				this->play.setLevel(3);
-				this->play.init();
+				Game::instance().keyReleased((char)51);
+				this->play.~Play();
+				this->play.init(3);
 			}
 			
 		}
@@ -234,15 +234,15 @@ inline void Scene::updateState()
 		{
 			if (Game::instance().getKey((char)49))
 			{
-				Game::instance().keyReleased((char)50);
-				this->play.setLevel(1);
-				this->play.init();
+				Game::instance().keyReleased((char)49);
+				this->play.~Play();
+				this->play.init(1);
 			}
 			else if (Game::instance().getKey((char)50))
 			{
 				Game::instance().keyReleased((char)50);
-				this->play.setLevel(2);
-				this->play.init();
+				this->play.~Play();
+				this->play.init(2);
 			}
 		}
 	}

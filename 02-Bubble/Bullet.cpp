@@ -60,9 +60,7 @@ Bullet::~Bullet() {
 }
 
 glm::vec2 Bullet::ret_pos() {
-	if (this != NULL)
-		return posBullet;
-	return glm::vec2(0.0f, 0.0f);
+	return glm::vec2(posBullet.x + 16, posBullet.y);
 }
 
 glm::vec2 Bullet::ret_size() {

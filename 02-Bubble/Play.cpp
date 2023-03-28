@@ -35,14 +35,22 @@ Play::~Play()
 		delete player;
 	if (spritePuerta != NULL)
 		delete spritePuerta;
+	for (int i = 0; i < elementList.size(); ++i) {
+		if (elementList[i] != NULL)
+			delete elementList[i];
+	}
+	for (int i = 0; i < enemyList.size(); ++i){
+		if (enemyList[i] != NULL)
+			delete enemyList[i];
+	}
 	//if (spriteBackground != NULL)
 		//delete spriteBackground;
 }
 
-void Play::init(bool immune)
+void Play::init(int i)
 {
+	    level = i;
 		this->initShaders();
-		immunitat = immune;
 		switch (level)
 		{
 		case 1:
@@ -153,7 +161,7 @@ inline void Play::updateState()
 	{
 		this->state = Play::State::LEVEL2;
 		level = 2;
-		this->init(immunitat);
+		this->init(2);
 	}
 
 	else if ( Game::instance().getKey((char)49))
@@ -161,7 +169,7 @@ inline void Play::updateState()
 
 		this->state = Play::State::LEVEL1;
 		level = 1;
-		this->init(immunitat);
+		this->init(1);
 	}
 }
 
@@ -228,20 +236,19 @@ void Play::checkHits() {
 		bool xocaY = (((enemyList[j]->ret_pos().y + enemyList[j]->ret_size().y) >= (player->ret_pos().y)) &&
 			(((player->ret_pos().y) + player->ret_size().y) >= enemyList[j]->ret_pos().y));;
 		if (xocaX && xocaY) {
-			level = 4;
-			this->init(immunitat);
+			
+			this->init(level);
 		}
 		else {
 			vector<Bullet*> activeBullets = enemyList[j]->bulletList;
 			for (int i = 0; i < activeBullets.size(); ++i) {
-			
 				bool balaX = (((activeBullets[i]->ret_pos().x + activeBullets[i]->ret_size().x) >= player->ret_pos().x) &&
 					((player->ret_pos().x + player->ret_size().x) >= activeBullets[i]->ret_pos().x));
 				bool balaY = (((activeBullets[i]->ret_pos().y + activeBullets[i]->ret_size().y) >= (player->ret_pos().y)) &&
 					(((player->ret_pos().y) + player->ret_size().y) >= activeBullets[i]->ret_pos().y));;
 				if (balaX && balaY) {
-					level = 4;
-					this->init(immunitat);
+					
+					this->init(level);
 					activeBullets[i]->~Bullet();
 					activeBullets.erase(activeBullets.begin() + i);
 				}

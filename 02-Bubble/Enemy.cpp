@@ -20,7 +20,7 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 	case PUÑETAZOS:
 		
 		spritesheet.loadFromFile("images/Personatges/Puñetazos.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		sprite = Sprite::createSprite(glm::ivec2(32, 48), glm::vec2(0.33f, 0.5f), &spritesheet, &shaderProgram);
+		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.33f, 0.5f), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(2);
 		sprite->setAnimationSpeed(STAND_RIGHT, 8);
 		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.0f, 0.0f));
@@ -36,13 +36,13 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 			sprite->changeAnimation(STAND_LEFT);
 			cooldown = 0;
 		}
-		size.x = 20;
-		size.y = 20;
+		size.x = 32;
+		size.y = 32;
 		health = 10;
 		break;
 	case DOCTOR:
 		spritesheet.loadFromFile("images/Personatges/Doctor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		sprite = Sprite::createSprite(glm::ivec2(32, 48), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
+		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(2);
 		sprite->setAnimationSpeed(STAND_RIGHT, 8);
 		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.5f, 0.0f));
@@ -59,13 +59,13 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 			cooldown = 85;
 			sprite->changeAnimation(STAND_LEFT);
 		}
-		size.x = 34;
-		size.y = 64;
+		size.x = 32;
+		size.y = 32;
 		health = 5;
 		break;
 	case ARMADO:
 		spritesheet.loadFromFile("images/Personatges/Armado.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		sprite = Sprite::createSprite(glm::ivec2(32, 48), glm::vec2(0.25f, 1.0f), &spritesheet, &shaderProgram);
+		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25f, 1.0f), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(2);
 			sprite->setAnimationSpeed(STAND_RIGHT, 8);
 			sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.25f, 0.0f));
@@ -78,8 +78,8 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 
 		else 
 			sprite->changeAnimation(STAND_LEFT);
-		size.x = 23;
-		size.y = 64;
+		size.x = 32;
+		size.y = 32;
 		health = 7;
 		break;
 	}
@@ -183,8 +183,7 @@ glm::vec2 Enemy::ret_size() {
 }
 glm::vec2 Enemy::ret_pos() {
 	
-	return glm::vec2(posEnemy.x+35, posEnemy.y-6);
-	
+	return glm::vec2(posEnemy.x+32, posEnemy.y);
 }
 int Enemy::return_type() {
 	return typeofEnemy;
