@@ -7,12 +7,14 @@
 #include "Level.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Elements.h"
+#include "Bullet.h"
 
 
 class Play
 {
 public: 
-	enum class State { LEVEL1, LEVEL2, LEVEL3 };
+	enum class State { LEVEL1, LEVEL2, LEVEL3, GAME_OVER };
 	
 
 public:
@@ -20,7 +22,7 @@ public:
 	Play();
 	~Play();
 
-	void init();
+	void init(bool immune);
 	void update(int deltaTime);
 	void render();
 
@@ -28,6 +30,8 @@ public:
 	void setLevel(int lev);
 
 	void initEnemies();
+	void initElements();
+	void checkHits();
 
 private:
 	void initShaders();
@@ -36,19 +40,27 @@ private:
 
 private:
 
+	bool immunitat;
 	Play::State state;
-
+	BulletManager bulletManager;
 	Level levels;
 	int level = 1;
 	TileMap* map;
 	Player* player;
 	Enemy* enemy;
-	Enemy* enemy2;
+	Enemy enemies;
+	Elements* element;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
 	Texture scene;
+	Texture texturePuerta;
+	Sprite* spritePuerta;
+	Texture textureOver;
+	Sprite* spriteOver;
 	vector<Enemy*> enemyList;
+	vector<Elements*> elementList;
+	Bullet bullet;
 
 	ShaderProgram shader;
 

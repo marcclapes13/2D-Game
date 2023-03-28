@@ -20,6 +20,9 @@ enum PlayerAnims
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
+	size.x = 32;
+	size.y = 32;
+	lifes = 3;
 	spritesheet.loadFromFile("images/Personatges/Soldados1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25, 0.5), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(4);
@@ -126,7 +129,22 @@ void Player::setPosition(const glm::vec2 &pos)
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
+glm::vec2 Player::ret_pos() {
+	glm::vec2 posaux = posPlayer;
+	posaux.x += 32;
+	return posaux;
+}
 
+glm::vec2 Player::ret_size() {
+	glm::vec2 sizeaux = size;
+	return sizeaux;
+}
+void Player::hit() {
+	--lifes;
+}
+int Player::return_lifes() {
+	return lifes;
+}
 
 
 

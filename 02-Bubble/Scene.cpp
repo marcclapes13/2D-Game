@@ -122,7 +122,7 @@ void Scene::render()
 
 void Scene::initPlay()
 {
-	this->play.init();
+	this->play.init(immune);
 }
 
 void Scene::initMenu()
@@ -191,6 +191,12 @@ inline void Scene::updateState()
 			this->state = Scene::State::MENU;
 			this->initMenu();
 		}
+		else if (Game::instance().getKey((char)103)) //press g
+		{
+			immune = !immune;
+			Game::instance().keyReleased((char)109);
+			this->initPlay();
+		}
 		else if (this->play.getLevel() == 1)
 			
 			{
@@ -198,7 +204,7 @@ inline void Scene::updateState()
 			{
 				Game::instance().keyReleased((char)50);
 				this->play.setLevel(2);
-				this->play.init();
+				this->play.init(immune);
 			}
 			
 		}
@@ -208,7 +214,7 @@ inline void Scene::updateState()
 			{
 				Game::instance().keyReleased((char)50);
 				this->play.setLevel(1);
-				this->play.init();
+				this->play.init(immune);
 			}
 		}
 	}
