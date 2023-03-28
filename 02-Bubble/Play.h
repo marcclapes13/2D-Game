@@ -4,36 +4,63 @@
 #include "TileMap.h"
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
-
+#include "Level.h"
 #include "Player.h"
+#include "Enemy.h"
+#include "Elements.h"
+#include "Bullet.h"
 
 
 class Play
 {
-
+public: 
+	enum class State { LEVEL1, LEVEL2, LEVEL3, GAME_OVER };
+	
 
 public:
 
 	Play();
 	~Play();
 
-	void init();
+	void init(bool immune);
 	void update(int deltaTime);
 	void render();
-	
+
+	int getLevel();
+	void setLevel(int lev);
+
+	void initEnemies();
+	void initElements();
+	void checkHits();
 
 private:
 	void initShaders();
+	inline void updateState();
 	
 
 private:
 
+	bool immunitat;
+	Play::State state;
+	BulletManager bulletManager;
+	Level levels;
+	int level = 1;
 	TileMap* map;
 	Player* player;
+	Enemy* enemy;
+	Enemy enemies;
+	Elements* element;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
 	Texture scene;
+	Texture texturePuerta;
+	Sprite* spritePuerta;
+	Texture textureOver;
+	Sprite* spriteOver;
+	vector<Enemy*> enemyList;
+	vector<Elements*> elementList;
+	Bullet bullet;
 
 	ShaderProgram shader;
 

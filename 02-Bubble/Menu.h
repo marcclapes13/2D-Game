@@ -18,7 +18,7 @@
 class Menu
 {
 public:
-
+	enum class State { MENU, CONTR, CRED, END };
 
 public:
 
@@ -29,28 +29,28 @@ public:
 	void update(int deltaTime);
 	void render();
 
+
 private:
 
 	void initShader();
 
+
+
 private:
 
-
 	Sprite* spriteMenu;
-	Sprite* spriteSelector;
-	Sprite* spriteControls;
-	Sprite* spriteCredits;
-	Sprite* spriteCongrats;
+	Sprite* cursor;
+
 
 	Texture textureMenu;
-	Texture textureSelector;
+	Texture textureCursor;
 	Texture textureControls;
 	Texture textureCredits;
 	Texture textureCongrats;
-
+	glm::mat4 projection;
 	ShaderProgram shader;
 	Texture scene;
-	glm::vec2 selectorPos = glm::vec2(480.f / 7.f, 235.f);
+	glm::vec2 selectorPos = glm::vec2(50.f, 50.f);
 };
 
 

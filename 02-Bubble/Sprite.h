@@ -35,7 +35,7 @@ public:
 	
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 position;
-
+	glm::vec2 getPosition();
 private:
 	Texture *texture;
 	ShaderProgram *shaderProgram;
