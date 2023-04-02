@@ -23,7 +23,7 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 {
 	dir = direccio;
 	typeofEnemy = typeOf;
-	cooldown = 50;
+	cooldown = 75;
 	aux = &shaderProgram;
 	switch (typeofEnemy) {
 	case PUÑETAZOS:
@@ -56,6 +56,7 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		health = 10;
 		break;
 	case DOCTOR:
+		transformado = false;
 		transform = 500;
 		spritesheet.loadFromFile("images/Personatges/Doctor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
@@ -80,6 +81,7 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		sprite->setAnimationSpeed(TRANSFORM4, 8);
 		sprite->addKeyframe(TRANSFORM4, glm::vec2(0.75f, 0.75f));
 
+		
 		sprite->setAnimationSpeed(MOVE_LEFT_AVION, 8);
 		sprite->addKeyframe(MOVE_LEFT_AVION, glm::vec2(0.0f, 0.25f));
 		sprite->addKeyframe(MOVE_LEFT_AVION, glm::vec2(0.25f, 0.25f));
@@ -192,20 +194,22 @@ void Enemy::update(int deltaTime)
 			--transform;
 		}
 		else {
+			size.y = 22;
+			transformado = true;
 			if (cooldown > 0) {
 				if (sprite->animation() != MOVE_RIGHT_AVION)
 					sprite->changeAnimation(MOVE_RIGHT_AVION);
-				posEnemy.x += 2;
+				posEnemy.x += 0.2;
 				cooldown--;
 			}
 			else {
 				if (sprite->animation() != MOVE_LEFT_AVION)
 					sprite->changeAnimation(MOVE_LEFT_AVION);
-				posEnemy.x -= 2;
+				posEnemy.x -= 0.2;
 				--cooldown;
 			}
-			if (cooldown == -85) {
-				cooldown = 85;
+			if (cooldown == -1000) {
+				cooldown = 1000;
 			}
 		}
 		break;
@@ -273,14 +277,30 @@ glm::vec2 Enemy::ret_size() {
 glm::vec2 Enemy::ret_pos() {
 	switch (typeofEnemy) {
 	case PUÑETAZOS: 
-		return glm::vec2(posEnemy.x + 32, posEnemy.y);
+		if (dir == 0) // dreta
+			return glm::vec2(posEnemy.x +24, posEnemy.y);
+		else 
+			return glm::vec2(posEnemy.x + 24, posEnemy.y);
 		break;
 	case ARMADO:
-		return glm::vec2(posEnemy.x + 32, posEnemy.y);
+		if (dir == 0) // dreta
+			return glm::vec2(posEnemy.x + 18, posEnemy.y);
+		else 
+			return glm::vec2(posEnemy.x + 18, posEnemy.y);
 		break;
 	case DOCTOR:
-		
-		return glm::vec2(posEnemy.x+32, posEnemy.y);
+		if (dir == 0) { // esquerra
+			if (!transformado)
+				return glm::vec2(posEnemy.x + 46, posEnemy.y);
+			else
+				return glm::vec2(posEnemy.x + 46, posEnemy.y+6);
+		}
+		else {
+			if (!transformado)
+				return glm::vec2(posEnemy.x + 18, posEnemy.y);
+			else
+				return glm::vec2(posEnemy.x + 18, posEnemy.y+6);
+		}
 		break;
 	}	
 }

@@ -253,12 +253,14 @@ void Play::initElements() {
 }
 void Play::checkHits() {
 	for (int j = 0; j < int(enemyList.size()); ++j) {
-		bool xocaX = (((enemyList[j]->ret_pos().x + enemyList[j]->ret_size().x) >= player->ret_pos().x) &&
-			((player->ret_pos().x + player->ret_size().x) >= enemyList[j]->ret_pos().x));
-		bool xocaY = (((enemyList[j]->ret_pos().y + enemyList[j]->ret_size().y) >= (player->ret_pos().y)) &&
-			(((player->ret_pos().y) + player->ret_size().y) >= enemyList[j]->ret_pos().y));;
-		if (xocaX && xocaY) {
-			this->init(level);
+		if (enemyList[j]->return_type() != 2) {
+			bool xocaX = (((enemyList[j]->ret_pos().x + enemyList[j]->ret_size().x) >= player->ret_pos().x) &&
+				((player->ret_pos().x + player->ret_size().x) >= enemyList[j]->ret_pos().x));
+			bool xocaY = (((enemyList[j]->ret_pos().y + enemyList[j]->ret_size().y) >= (player->ret_pos().y)) &&
+				(((player->ret_pos().y) + player->ret_size().y) >= enemyList[j]->ret_pos().y));;
+			if (xocaX && xocaY) {
+				this->init(level);
+			}
 		}
 		else {
 			vector<Bullet*> activeBullets = enemyList[j]->bulletList;
@@ -268,7 +270,6 @@ void Play::checkHits() {
 				bool balaY = (((activeBullets[i]->ret_pos().y + activeBullets[i]->ret_size().y) >= (player->ret_pos().y)) &&
 					(((player->ret_pos().y) + player->ret_size().y) >= activeBullets[i]->ret_pos().y));
 				if (balaX && balaY) {
-					
 					init(level);
 					activeBullets[i]->~Bullet();
 					activeBullets.erase(activeBullets.begin() + i);

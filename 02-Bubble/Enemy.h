@@ -30,11 +30,13 @@ public:
 	int return_type();
 
 private:
+	bool transformado;
 	int typeofEnemy, health, cooldown, dir, transform;
 	glm::vec2 posEnemy, size, tileMapDispl;
 	Player* player;
 	Texture spritesheet;
 	Sprite* sprite;
+	Sprite* spriteAvion;
 	TileMap* map;
 	ShaderProgram* aux;
 	Bullet* bullet;
