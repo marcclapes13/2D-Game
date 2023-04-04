@@ -70,6 +70,7 @@ void Play::init(int i)
 		}
 	}
 	enemyList.clear();
+	elementList.clear();
 		
 	level = i;
 	this->initShaders();
@@ -179,23 +180,6 @@ void Play::initShaders()
 	vShader.free();
 	fShader.free();
 }
-inline void Play::updateState()
-{
-	if (Game::instance().getKey((char)50))
-	{
-		this->state = Play::State::LEVEL2;
-		level = 2;
-		this->init(2);
-	}
-
-	else if ( Game::instance().getKey((char)49))
-	{
-
-		this->state = Play::State::LEVEL1;
-		level = 1;
-		this->init(1);
-	}
-}
 
 int Play::getLevel() {
 	return level;
@@ -275,7 +259,34 @@ void Play::initEnemies() {
 	}
 }
 void Play::initElements() {
-	
+	if (level == 1) {
+		int despx = 25;
+		int despy = 5;
+		int num_elem = 4;
+		for (int i = 0; i < num_elem; ++i) {
+			switch (i + 1) {
+			case 1:
+				despx = 4, despy = 0;
+				break;
+			case 2:
+				despx = 3, despy = 0;
+				break;
+			case 3:
+				despx = 2, despy = 0;
+				break;
+			case 4:
+				despx = 25, despy = 5;
+				break;
+			}
+
+			Elements* element_aux;
+			element_aux = new Elements();
+			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, i);
+			element_aux->setTileMap(map);
+			element_aux->setPosition(glm::vec2(despx * map->getTileSize(), despy * map->getTileSize()));
+			elementList.push_back(element_aux);
+		}
+	}
 	if (level == 3) {
 		int despx = 25;
 		int despy = 5;
@@ -321,7 +332,10 @@ void Play::checkHits() {
 				else {
 					elementList[0] = NULL;
 					elementList.erase(elementList.begin());
+					player = new Player();
+					player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 					player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+					player->setTileMap(map);
 				}
 			}
 
@@ -340,7 +354,10 @@ void Play::checkHits() {
 					}
 					else {
 						elementList.erase(elementList.begin());
+						player = new Player();
+						player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 						player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+						player->setTileMap(map);
 					}
 					activeBullets[i] = NULL;
 					activeBullets.erase(activeBullets.begin() + i);
