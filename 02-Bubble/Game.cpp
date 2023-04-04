@@ -3,12 +3,12 @@
 #include "Game.h"
 
 
-void Game::init()
+void Game::init(int vides, int estat)
 {
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	scene = new Scene;
-	scene->init();
+	scene->init(vides, estat);
 }
 
 bool Game::update(int deltaTime)

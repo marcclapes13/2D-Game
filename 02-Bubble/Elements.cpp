@@ -10,7 +10,7 @@ enum animElem {
 
 void Elements::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, int element) {
 	
-	if (element < 3) {
+	if (element > 0) {
 		spritesheet.loadFromFile("images/Objectes/vida.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1.f, 1.f), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(1);

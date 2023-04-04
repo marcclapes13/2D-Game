@@ -20,7 +20,7 @@ enum PlayerAnims
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
-	size.x = 32;
+	size.x = 22;
 	size.y = 32;
 	lifes = 3;
 	spritesheet.loadFromFile("images/Personatges/Soldados1.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -82,20 +82,26 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(STAND_RIGHT);
 	}
 	
-	if(bJumping)
+	if (bJumping)
 	{
 		jumpAngle += JUMP_ANGLE_STEP;
-		if(jumpAngle == 180)
-		{
+		if (!map->collisionMoveUp(glm::vec2(posPlayer.x, posPlayer.y), glm::ivec2(32, 32))) {
+			if (jumpAngle == 180)
+			{
+				bJumping = false;
+					posPlayer.y = startY;
+			}
+			else
+			{
+				posPlayer.y = int(startY - 64 * sin(3.14159f * jumpAngle / 180.f));
+					if (jumpAngle > 90)
+						bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+			}
+		}
+		else {
 			bJumping = false;
-			posPlayer.y = startY;
 		}
-		else
-		{
-			posPlayer.y = int(startY - 64 * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
-		}
+		
 	}
 	else
 	{

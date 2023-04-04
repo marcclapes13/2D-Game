@@ -9,8 +9,14 @@
 #define SCREEN_X 32
 #define SCREEN_Y 16
 
-#define INIT_PLAYER_X_TILES 8
-#define INIT_PLAYER_Y_TILES 3
+#define INIT_PLAYER_X_TILES_1 8
+#define INIT_PLAYER_Y_TILES_1 3
+
+#define INIT_PLAYER_X_TILES_2 8
+#define INIT_PLAYER_Y_TILES_2 3
+
+#define INIT_PLAYER_X_TILES_3 5
+#define INIT_PLAYER_Y_TILES_3 19
 
 #define INIT_ENEMY_X_TILES 20
 #define INIT_ENEMY_Y_TILES 25
@@ -35,7 +41,6 @@ Play::Play()
 	}
 	enemyList.clear();
 	elementList.clear();
-	vides = 3;
 }
 
 Play::~Play()
@@ -59,8 +64,10 @@ Play::~Play()
 
 }
 
-void Play::init(int i)
+void Play::init(int i, int lives)
 {
+	immunitat = false;
+	vides = lives;
 	map = NULL;
 	player = NULL;
 	spritePuerta = NULL;
@@ -108,7 +115,15 @@ void Play::init(int i)
 
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	if (level == 1) {
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_1 * map->getTileSize(), INIT_PLAYER_Y_TILES_1 * map->getTileSize()));
+	}
+	else if (level == 2) {
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_2 * map->getTileSize(), INIT_PLAYER_Y_TILES_2 * map->getTileSize()));
+	}
+	else {
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_3 * map->getTileSize(), INIT_PLAYER_Y_TILES_3 * map->getTileSize()));
+	}
 	player->setTileMap(map);
 	initEnemies();
 	initElements();
@@ -120,7 +135,10 @@ void Play::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	
+	if (!immunitat) {
 		checkHits();
+	}
+	checkBullets();
 	player->update(deltaTime);
 	
 	for (int i = 0; i < int(elementList.size()); ++i)
@@ -216,7 +234,7 @@ void Play::initEnemies() {
 			}
 			Enemy* enemy_aux;
 			enemy_aux = new Enemy();
-			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio, level, i+1, &bulletManager);
+			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio, level, i, &bulletManager);
 			enemy_aux->setTileMap(map);
 			enemy_aux->setPosition(glm::vec2(enemy_x * map->getTileSize(), enemy_y * map->getTileSize()));
 			enemyList.push_back(enemy_aux);
@@ -251,7 +269,7 @@ void Play::initEnemies() {
 			}
 			Enemy* enemy_aux;
 			enemy_aux = new Enemy();
-			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio, level, i+1, &bulletManager);
+			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio, level, i, &bulletManager);
 			enemy_aux->setTileMap(map);
 			enemy_aux->setPosition(glm::vec2(enemy_x * map->getTileSize(), enemy_y * map->getTileSize()));
 			enemyList.push_back(enemy_aux);
@@ -262,20 +280,20 @@ void Play::initElements() {
 	if (level == 1) {
 		int despx = 25;
 		int despy = 5;
-		int num_elem = 4;
+		int num_elem = 1+vides;
 		for (int i = 0; i < num_elem; ++i) {
 			switch (i + 1) {
 			case 1:
-				despx = 4, despy = 0;
+				despx = 25, despy = 5;
 				break;
 			case 2:
-				despx = 3, despy = 0;
-				break;
-			case 3:
 				despx = 2, despy = 0;
 				break;
+			case 3:
+				despx = 3, despy = 0;
+				break;
 			case 4:
-				despx = 25, despy = 5;
+				despx = 4, despy = 0;
 				break;
 			}
 
@@ -290,21 +308,22 @@ void Play::initElements() {
 	if (level == 3) {
 		int despx = 25;
 		int despy = 5;
-		int num_elem = 4;
+		int num_elem = 1+vides;
 		for (int i = 0; i < num_elem; ++i) {
 			switch (i + 1) {
 			case 1:
-				despx = 4, despy = 0;
-				break;
-			case 2:
-				despx = 3, despy = 0;
-				break;
-			case 3:
-				despx = 2, despy = 0;
-				break;
-			case 4:
 				despx = 25, despy = 5;
 				break;
+			case 2:
+				despx = 2, despy = 0;
+				break;
+			case 3:
+				despx = 3, despy = 0;
+				break;
+			case 4:
+				despx = 4, despy = 0;
+				break;
+
 			}
 
 			Elements* element_aux;
@@ -327,14 +346,21 @@ void Play::checkHits() {
 			if (xocaX && xocaY) {
 				--vides;
 				if (vides == 0) {
-					Game::instance().init();
+					Game::instance().init(vides, 4);
 				}
 				else {
-					elementList[0] = NULL;
-					elementList.erase(elementList.begin());
+					elementList.erase(elementList.end()-1);
 					player = new Player();
 					player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-					player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+					if (level == 1) {
+						player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_1 * map->getTileSize(), INIT_PLAYER_Y_TILES_1 * map->getTileSize()));
+					}
+					else if (level == 2) {
+						player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_2 * map->getTileSize(), INIT_PLAYER_Y_TILES_2 * map->getTileSize()));
+					}
+					else {
+						player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_3 * map->getTileSize(), INIT_PLAYER_Y_TILES_3 * map->getTileSize()));
+					}
 					player->setTileMap(map);
 				}
 			}
@@ -350,30 +376,76 @@ void Play::checkHits() {
 				if (balaX && balaY) {
 					--vides;
 					if (vides == 0) {
-						Game::instance().init();
+						Game::instance().init(vides, 4);
 					}
 					else {
-						elementList.erase(elementList.begin());
+						elementList.erase(elementList.end()-1);
 						player = new Player();
 						player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-						player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+						if (level == 1) {
+							player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_1 * map->getTileSize(), INIT_PLAYER_Y_TILES_1 * map->getTileSize()));
+						}
+						else if (level == 2) {
+							player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_2 * map->getTileSize(), INIT_PLAYER_Y_TILES_2 * map->getTileSize()));
+						}
+						else {
+							player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_3 * map->getTileSize(), INIT_PLAYER_Y_TILES_3 * map->getTileSize()));
+						}
 						player->setTileMap(map);
 					}
-					activeBullets[i] = NULL;
 					activeBullets.erase(activeBullets.begin() + i);
+					enemyList[j]->bulletList = activeBullets;
 				}
 			}
 		}
 	}
-	glm::ivec2 playerPos = player->ret_pos();
-	if (map->deadMoveDown(playerPos, glm::ivec2(32, 32), &playerPos.y)) {
-		init(level);
-	}
-	/*if (level == 1) {
+	
+	if (level == 1 || level == 3) {
 		if (player->ret_pos().y >= 25 * map->getTileSize() && player->ret_pos().x >= 14 * map->getTileSize() && player->ret_pos().x <= 25 * map->getTileSize()) {
-			init(level);
+			--vides;
+			if (vides == 0) {
+				Game::instance().init(vides, 4);
+			}
+			else {
+				elementList.erase(elementList.end() - 1);
+				player = new Player();
+				player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				if (level == 1) {
+					player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_1 * map->getTileSize(), INIT_PLAYER_Y_TILES_1 * map->getTileSize()));
+				}
+				else if (level == 2) {
+					player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_2 * map->getTileSize(), INIT_PLAYER_Y_TILES_2 * map->getTileSize()));
+				}
+				else {
+					player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_3 * map->getTileSize(), INIT_PLAYER_Y_TILES_3 * map->getTileSize()));
+				}
+				player->setTileMap(map);
+			}
 		}
 	}
-	*/
+	
 
+}
+
+void Play::checkBullets() {
+	if (level == 3) {
+		for (int j = 0; j < int(enemyList.size()); ++j) {
+			vector<Bullet*> activeBullets = enemyList[j]->bulletList;
+			for (int i = 0; i < activeBullets.size(); ++i) {
+				if ((activeBullets[i]->ret_pos().x > 18* map->getTileSize()) && (activeBullets[i]->ret_pos().x < 22* map->getTileSize())) {
+					activeBullets.erase(activeBullets.begin() + i);
+					enemyList[j]->bulletList = activeBullets;
+				}
+			}
+		}
+	}
+
+}
+
+int Play::getLives() {
+	return vides;
+}
+
+void Play::setImmunitat(bool immune) {
+	immunitat = immune;
 }

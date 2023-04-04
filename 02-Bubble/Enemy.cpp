@@ -6,7 +6,7 @@
 
 enum EnemyAnims
 {
-	MOVE_RIGHT, MOVE_LEFT, TRANSFORM1, TRANSFORM2, TRANSFORM3, TRANSFORM4, MOVE_RIGHT_AVION, MOVE_LEFT_AVION
+	MOVE_RIGHT, MOVE_LEFT, TRANSFORM1, TRANSFORM2, TRANSFORM3, TRANSFORM4, MOVE_RIGHT_AVION, MOVE_LEFT_AVION, MOVE_UP_AVION, MOVE_DOWN_AVION
 };
 enum SoldierAnims
 {
@@ -44,7 +44,32 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.33f, 0.5f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.67f, 0.5f));
 
-		
+		if (lvl == 1) {
+			switch (numEnemy) {
+			case 0:
+				cooldown = 70;
+				
+				break;
+			case 1:
+				cooldown = 0;
+				break;
+			case 2:
+				cooldown = 180;
+				break;
+			case 3:
+				cooldown = 45;
+				break;
+			case 4:
+				cooldown = 45;
+				break;
+
+			}
+
+		}
+		else if (lvl == 2) {
+
+		}
+		else {
 			if (dir == 0) {
 
 				cooldown = 70;
@@ -53,18 +78,25 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 
 				cooldown = 0;
 			}
+		}
 		
 		sprite->changeAnimation(0);
-		size.x = 32;
+		size.x = 22;
 		size.y = 32;
 		health = 10;
 		break;
 	case DOCTOR:
+		cooldownAvio = 0;
+		first = false;
+		moveDown = false;
+		moveUp = false;
+		moveLeft = false;
+		moveRight = false;
 		transformado = false;
-		transform = 500;
+		transform = 70; //630
 		spritesheet.loadFromFile("images/Personatges/Doctor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25f, 0.25f), &spritesheet, &shaderProgram);
-		sprite->setNumberAnimations(9);
+		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25f, 0.20f), &spritesheet, &shaderProgram);
+		sprite->setNumberAnimations(11);
 		sprite->setAnimationSpeed(MOVE_RIGHT, 8);
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.5f, 0.0f));
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.75f, 0.0f));
@@ -74,37 +106,45 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.25f, 0.0f));
 
 		sprite->setAnimationSpeed(TRANSFORM1, 8);
-		sprite->addKeyframe(TRANSFORM1, glm::vec2(0.0f, 0.75f));
+		sprite->addKeyframe(TRANSFORM1, glm::vec2(0.0f, 0.6f));
 
 		sprite->setAnimationSpeed(TRANSFORM2, 8);
-		sprite->addKeyframe(TRANSFORM2, glm::vec2(0.25f, 0.75f));
+		sprite->addKeyframe(TRANSFORM2, glm::vec2(0.25f, 0.6f));
 
 		sprite->setAnimationSpeed(TRANSFORM3, 8);
-		sprite->addKeyframe(TRANSFORM3, glm::vec2(0.5f, 0.75));
+		sprite->addKeyframe(TRANSFORM3, glm::vec2(0.5f, 0.6));
 
 		sprite->setAnimationSpeed(TRANSFORM4, 8);
-		sprite->addKeyframe(TRANSFORM4, glm::vec2(0.75f, 0.75f));
+		sprite->addKeyframe(TRANSFORM4, glm::vec2(0.75f, 0.6f));
 
 		
 		sprite->setAnimationSpeed(MOVE_LEFT_AVION, 8);
-		sprite->addKeyframe(MOVE_LEFT_AVION, glm::vec2(0.0f, 0.25f));
-		sprite->addKeyframe(MOVE_LEFT_AVION, glm::vec2(0.25f, 0.25f));
+		sprite->addKeyframe(MOVE_LEFT_AVION, glm::vec2(0.0f, 0.2f));
+		sprite->addKeyframe(MOVE_LEFT_AVION, glm::vec2(0.25f, 0.2f));
 
 		sprite->setAnimationSpeed(MOVE_RIGHT_AVION, 8);
-		sprite->addKeyframe(MOVE_RIGHT_AVION, glm::vec2(0.5f, 0.25f));
-		sprite->addKeyframe(MOVE_RIGHT_AVION, glm::vec2(0.75f, 0.25f));
+		sprite->addKeyframe(MOVE_RIGHT_AVION, glm::vec2(0.5f, 0.2f));
+		sprite->addKeyframe(MOVE_RIGHT_AVION, glm::vec2(0.75f, 0.2f));
+
+		sprite->setAnimationSpeed(MOVE_UP_AVION, 8);
+		sprite->addKeyframe(MOVE_UP_AVION, glm::vec2(0.0f, 0.8f));
+		sprite->addKeyframe(MOVE_UP_AVION, glm::vec2(0.25f, 0.8f));
+
+		sprite->setAnimationSpeed(MOVE_DOWN_AVION, 8);
+		sprite->addKeyframe(MOVE_DOWN_AVION, glm::vec2(0.5f, 0.8f));
+		sprite->addKeyframe(MOVE_DOWN_AVION, glm::vec2(0.75f, 0.8f));
 
 		
 			if (dir == 0) {
 				cooldown = 0;
 			}
 			else {
-				cooldown = 85;
+				cooldown = 70;
 
 			}
 		
 		sprite->changeAnimation(0);
-		size.x = 32;
+		size.x = 22;
 		size.y = 32;
 		health = 5;
 		break;
@@ -135,7 +175,108 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 void Enemy::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-	
+	if (lvl == 1) {
+		switch (numEnemy) {
+		case 0:
+			if (cooldown > 0) {
+				if (sprite->animation() != MOVE_RIGHT)
+					sprite->changeAnimation(MOVE_RIGHT);
+				posEnemy.x += 2;
+				cooldown--;
+				dir = 0;
+
+			}
+			else {
+				if (sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
+				posEnemy.x -= 2;
+				--cooldown;
+				dir = 1;
+			}
+			if (cooldown == -70) {
+				cooldown = 70;
+			}
+			break;
+		case 1:
+			if (cooldown > 0) {
+				if (sprite->animation() != MOVE_RIGHT)
+					sprite->changeAnimation(MOVE_RIGHT);
+				posEnemy.x += 2;
+				cooldown--;
+				dir = 0;
+
+			}
+			else {
+				if (sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
+				posEnemy.x -= 2;
+				--cooldown;
+				dir = 1;
+			}
+			if (cooldown == -70) {
+				cooldown = 70;
+			}
+			break;
+		case 2:
+			if (cooldown > 0) {
+				if (sprite->animation() != MOVE_RIGHT)
+					sprite->changeAnimation(MOVE_RIGHT);
+				posEnemy.x += 2;
+				cooldown--;
+
+			}
+			else {
+				if (sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
+				posEnemy.x -= 2;
+				--cooldown;
+			}
+			if (cooldown == -180) {
+				cooldown = 180;
+			}
+			break;
+		case 3:
+			if (cooldown > 0) {
+				if (sprite->animation() != MOVE_RIGHT)
+					sprite->changeAnimation(MOVE_RIGHT);
+				posEnemy.x += 2;
+				cooldown--;
+
+			}
+			else {
+				if (sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
+				posEnemy.x -= 2;
+				--cooldown;
+			}
+			if (cooldown == -45) {
+				cooldown = 45;
+			}
+			break;
+		case 4:
+			if (cooldown > 0) {
+				if (sprite->animation() != MOVE_RIGHT)
+					sprite->changeAnimation(MOVE_RIGHT);
+				posEnemy.x += 2;
+				cooldown--;
+
+			}
+			else {
+				if (sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
+				posEnemy.x -= 2;
+				--cooldown;
+			}
+			if (cooldown == -45) {
+				cooldown = 45;
+			}
+			break;
+		}
+	}
+	else if (lvl == 2) {
+
+	}
+	else {
 		switch (typeofEnemy) {
 		case (PUÑETAZOS):
 			if (cooldown > 0) {
@@ -162,15 +303,17 @@ void Enemy::update(int deltaTime)
 						sprite->changeAnimation(MOVE_LEFT);
 					posEnemy.x += 2;
 					cooldown--;
+					dir = 0;
 				}
 				else {
 					if (sprite->animation() != MOVE_RIGHT)
 						sprite->changeAnimation(MOVE_RIGHT);
 					posEnemy.x -= 2;
 					--cooldown;
+					dir = 1;
 				}
-				if (cooldown == -85) {
-					cooldown = 85;
+				if (cooldown == -70) {
+					cooldown = 70;
 				}
 				--transform;
 			}
@@ -196,25 +339,159 @@ void Enemy::update(int deltaTime)
 				if (sprite->animation() != TRANSFORM4) {
 					sprite->changeAnimation(TRANSFORM4);
 				}
+				first = true;
 				--transform;
 			}
 			else {
-				size.y = 22;
-				transformado = true;
-				if (cooldown > 0) {
-					if (sprite->animation() != MOVE_RIGHT_AVION)
-						sprite->changeAnimation(MOVE_RIGHT_AVION);
-					posEnemy.x += 0.2;
-					cooldown--;
+				if (numEnemy == 2) { // avió esquerra
+					size.y = 22;
+					transformado = true;
+					if (first == true) {
+						if (!moveDown) {
+							if (sprite->animation() != MOVE_LEFT_AVION)
+								sprite->changeAnimation(MOVE_LEFT_AVION);
+							posEnemy.x -= 2;
+							++cooldownAvio;
+							if (cooldownAvio == 15) {
+								moveDown = true;
+								cooldownAvio = 0;
+							}
+						}
+						else {
+							if (sprite->animation() != MOVE_DOWN_AVION)
+								sprite->changeAnimation(MOVE_DOWN_AVION);
+							posEnemy.y += 2;
+							++cooldownAvio;
+							if (cooldownAvio == 30) {
+								moveDown = false;
+								moveRight = true;
+								cooldownAvio = 0;
+								first = false;
+							}
+						}
+
+					}
+					else {
+						if (moveDown) {
+							if (sprite->animation() != MOVE_DOWN_AVION)
+								sprite->changeAnimation(MOVE_DOWN_AVION);
+							posEnemy.y += 2;
+							++cooldownAvio;
+							if (cooldownAvio == 95) {
+								moveDown = false;
+								moveRight = true;
+								cooldownAvio = 0;
+							}
+						}
+						else if (moveRight) {
+							if (sprite->animation() != MOVE_RIGHT_AVION)
+								sprite->changeAnimation(MOVE_RIGHT_AVION);
+							posEnemy.x += 2;
+							++cooldownAvio;
+							if (cooldownAvio == 200) {
+								moveRight = false;
+								moveUp = true;
+								cooldownAvio = 0;
+							}
+						}
+						else if (moveUp) {
+							if (sprite->animation() != MOVE_UP_AVION)
+								sprite->changeAnimation(MOVE_UP_AVION);
+							posEnemy.y -= 2;
+							++cooldownAvio;
+							if (cooldownAvio == 95) {
+								moveUp = false;
+								moveLeft = true;
+								cooldownAvio = 0;
+							}
+						}
+						else if (moveLeft) {
+							if (sprite->animation() != MOVE_LEFT_AVION)
+								sprite->changeAnimation(MOVE_LEFT_AVION);
+							posEnemy.x -= 2;
+							++cooldownAvio;
+							if (cooldownAvio == 200) {
+								moveLeft = false;
+								moveDown = true;
+								cooldownAvio = 0;
+							}
+						}
+					}
 				}
-				else {
-					if (sprite->animation() != MOVE_LEFT_AVION)
-						sprite->changeAnimation(MOVE_LEFT_AVION);
-					posEnemy.x -= 0.2;
-					--cooldown;
-				}
-				if (cooldown == -1000) {
-					cooldown = 1000;
+				else if (numEnemy == 3) { // avió dreta
+					size.y = 22;
+					transformado = true;
+					if (first == true) {
+						if (!moveDown) {
+							if (sprite->animation() != MOVE_RIGHT_AVION)
+								sprite->changeAnimation(MOVE_RIGHT_AVION);
+							posEnemy.x += 2;
+							++cooldownAvio;
+							if (cooldownAvio == 15) {
+								moveDown = true;
+								cooldownAvio = 0;
+							}
+						}
+						else {
+							if (sprite->animation() != MOVE_DOWN_AVION)
+								sprite->changeAnimation(MOVE_DOWN_AVION);
+							posEnemy.y += 2;
+							++cooldownAvio;
+							if (cooldownAvio == 30) {
+								moveDown = false;
+								moveLeft = true;
+								cooldownAvio = 0;
+								first = false;
+							}
+						}
+
+					}
+					else {
+						if (moveDown) {
+							if (sprite->animation() != MOVE_DOWN_AVION)
+								sprite->changeAnimation(MOVE_DOWN_AVION);
+							posEnemy.y += 2;
+							++cooldownAvio;
+							if (cooldownAvio == 95) {
+								moveDown = false;
+								moveLeft = true;
+								cooldownAvio = 0;
+							}
+						}
+						else if (moveRight) {
+							if (sprite->animation() != MOVE_RIGHT_AVION)
+								sprite->changeAnimation(MOVE_RIGHT_AVION);
+							posEnemy.x += 2;
+							++cooldownAvio;
+							if (cooldownAvio == 200) {
+								moveRight = false;
+								moveDown = true;
+								cooldownAvio = 0;
+							}
+						}
+						else if (moveUp) {
+							if (sprite->animation() != MOVE_UP_AVION)
+								sprite->changeAnimation(MOVE_UP_AVION);
+							posEnemy.y -= 2;
+							++cooldownAvio;
+							if (cooldownAvio == 95) {
+								moveUp = false;
+								moveRight = true;
+								cooldownAvio = 0;
+							}
+						}
+						else if (moveLeft) {
+							if (sprite->animation() != MOVE_LEFT_AVION)
+								sprite->changeAnimation(MOVE_LEFT_AVION);
+							posEnemy.x -= 2;
+							++cooldownAvio;
+							if (cooldownAvio == 200) {
+								moveLeft = false;
+								moveUp = true;
+								cooldownAvio = 0;
+							}
+						}
+					}
 				}
 			}
 			break;
@@ -229,6 +506,7 @@ void Enemy::update(int deltaTime)
 			break;
 
 		}
+	}
 	
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
@@ -284,9 +562,9 @@ glm::vec2 Enemy::ret_pos() {
 	switch (typeofEnemy) {
 	case PUÑETAZOS: 
 		if (dir == 0) // dreta
-			return glm::vec2(posEnemy.x +24, posEnemy.y);
+			return glm::vec2(posEnemy.x +34, posEnemy.y);
 		else 
-			return glm::vec2(posEnemy.x + 24, posEnemy.y);
+			return glm::vec2(posEnemy.x + 30, posEnemy.y);
 		break;
 	case ARMADO:
 		if (dir == 0) // dreta
@@ -297,15 +575,15 @@ glm::vec2 Enemy::ret_pos() {
 	case DOCTOR:
 		if (dir == 0) { // esquerra
 			if (!transformado)
-				return glm::vec2(posEnemy.x + 46, posEnemy.y);
+				return glm::vec2(posEnemy.x + 38, posEnemy.y);
 			else
-				return glm::vec2(posEnemy.x + 46, posEnemy.y+6);
+				return glm::vec2(posEnemy.x + 38, posEnemy.y+6);
 		}
 		else {
 			if (!transformado)
-				return glm::vec2(posEnemy.x + 18, posEnemy.y);
+				return glm::vec2(posEnemy.x + 30, posEnemy.y);
 			else
-				return glm::vec2(posEnemy.x + 18, posEnemy.y+6);
+				return glm::vec2(posEnemy.x + 30, posEnemy.y+6);
 		}
 		break;
 	}	

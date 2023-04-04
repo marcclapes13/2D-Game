@@ -22,7 +22,7 @@ public:
 	Play();
 	~Play();
 
-	void init(int lev);
+	void init(int lev, int lives);
 	void update(int deltaTime);
 	void render();
 
@@ -33,10 +33,14 @@ public:
 	void initElements();
 	void initVides();
 	void checkHits();
+	
+	void setImmunitat(bool immune);
+	int getLives();
 
 private:
 	void initShaders();
 	inline void updateState();
+	void checkBullets();
 	
 
 private:

@@ -30,8 +30,8 @@ public:
 	int return_type();
 
 private:
-	bool transformado;
-	int typeofEnemy, health, cooldown, dir, transform, lvl, numEnemy;
+	bool transformado, moveDown, moveLeft, moveRight, moveUp, first;
+	int typeofEnemy, health, cooldown, dir, transform, lvl, numEnemy, cooldownAvio;
 	glm::vec2 posEnemy, size, tileMapDispl;
 	Player* player;
 	Texture spritesheet;

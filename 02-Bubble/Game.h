@@ -27,7 +27,7 @@ public:
 		return G;
 	}
 	
-	void init();
+	void init(int vides, int estat);
 	bool update(int deltaTime);
 	void render();
 	

@@ -14,6 +14,7 @@ Scene::Scene()
 {
 	menu = new Menu;
 	play = new Play;
+	
 }
 
 Scene::~Scene()
@@ -22,8 +23,29 @@ Scene::~Scene()
 }
 
 
-void Scene::init()
+void Scene::init(int vides, int estat)
 {
+	immune = false;
+	switch (estat) {
+	case 0:
+		this->state = Scene::State::MENU;
+		break;
+	case 1:
+		this->state = Scene::State::PLAY;
+		break;
+	case 2:
+		this->state = Scene::State::CONTR;
+		break;
+	case 3:
+		this->state = Scene::State::CRED;
+		break;
+	case 4:
+		this->state = Scene::State::OVER;
+		break;
+
+	}
+	
+	lives = vides;
 	switch (this->state)
 	{
 	case Scene::State::MENU:
@@ -34,7 +56,7 @@ void Scene::init()
 	}
 	case Scene::State::PLAY:
 	{
-		this->initPlay(1);
+		this->initPlay(1, lives);
 		break;
 	}
 	case Scene::State::CONTR:
@@ -47,6 +69,9 @@ void Scene::init()
 		this->initCredits();
 		break;
 	}
+	case Scene::State::OVER:
+		this->initOver();
+		break;
 	default:
 	{
 		std::cerr << "[SCENE::init] wrong game state: " << std::endl;
@@ -80,6 +105,9 @@ void Scene::update(int deltaTime)
 		this->updateCredits(deltaTime);
 		break;
 	}
+	case Scene::State::OVER:
+		this->updateOver(deltaTime);
+		break;
 	default:
 	{
 		std::cerr << "[SCENE::update] wrong game state: " << std::endl;
@@ -113,6 +141,11 @@ void Scene::render()
 		this->renderCredits();
 		break;
 	}
+	case Scene::State::OVER:
+	{
+		this->renderOver();
+		break;
+	}
 	default:
 	{
 		std::cerr << "[SCENE::render] wrong game state: " << std::endl;
@@ -121,9 +154,9 @@ void Scene::render()
 	}
 }
 
-void Scene::initPlay(int level)
+void Scene::initPlay(int level, int lives)
 {
-	this->play->init(level);
+	this->play->init(level, lives);
 }
 
 void Scene::initMenu()
@@ -139,6 +172,11 @@ void Scene::initContr()
 void Scene::initCredits()
 {
 	this->credits.init();
+}
+
+void Scene::initOver()
+{
+	this->over.init();
 }
 
 
@@ -164,6 +202,11 @@ void Scene::updateCredits(int deltaTime)
 
 }
 
+void Scene::updateOver(int deltaTime)
+{
+	this->over.update(deltaTime);
+
+}
 void Scene::renderPlay()
 {
 	play->render();
@@ -182,6 +225,10 @@ void Scene::renderCredits()
 {
 	this->credits.render();
 }
+void Scene::renderOver()
+{
+	this->over.render();
+}
 void Scene::setMenu() {
 	this->state = Scene::State::MENU;
 }
@@ -189,17 +236,18 @@ inline void Scene::updateState()
 {
 	if (this->state == Scene::State::PLAY) 
 	{
-		if (Game::instance().getKey((char)109)) //press m
+		if (Game::instance().getKey((char)98)) //press b
 		{
-			Game::instance().keyReleased((char)109);
+			Game::instance().keyReleased((char)98);
 			this->state = Scene::State::MENU;
 			this->initMenu();
 		}
 		else if (Game::instance().getKey((char)103)) //press g
 		{
-			immune = !immune;
+			if (immune) immune = false;
+			else immune = true;
 			Game::instance().keyReleased((char)109);
-			this->initPlay(1);
+			play->setImmunitat(immune);
 		}
 		else if (this->play->getLevel() == 1)
 			
@@ -207,14 +255,15 @@ inline void Scene::updateState()
 			if (Game::instance().getKey((char)50)) //press 2
 			{
 				Game::instance().keyReleased((char)50);
+				int v = play->getLives();
 				
-				this->initPlay(2);
+				this->initPlay(2, v);
 			}
 			else if (Game::instance().getKey((char)51)) //press 3
 			{
 				Game::instance().keyReleased((char)51);
-				
-				this->initPlay(3);
+				int v = play->getLives();
+				this->initPlay(3, v);
 			}
 			
 		}
@@ -223,14 +272,14 @@ inline void Scene::updateState()
 			if (Game::instance().getKey((char)49))
 			{
 				Game::instance().keyReleased((char)49);
-				
-				this->initPlay(1);
+				int v = play->getLives();
+				this->initPlay(1, v);
 			}
 			else if (Game::instance().getKey((char)51))
 			{
 				Game::instance().keyReleased((char)51);
-				
-				this->initPlay(3);
+				int v = play->getLives();
+				this->initPlay(3, v);
 			}
 			
 		}
@@ -239,14 +288,14 @@ inline void Scene::updateState()
 			if (Game::instance().getKey((char)49))
 			{
 				Game::instance().keyReleased((char)49);
-
-				this->initPlay(1);
+				int v = play->getLives();
+				this->initPlay(1, v);
 			}
 			else if (Game::instance().getKey((char)50))
 			{
 				Game::instance().keyReleased((char)50);
-				
-				this->initPlay(2);
+				int v = play->getLives();
+				this->initPlay(2, v);
 			}
 		}
 	}
@@ -257,7 +306,7 @@ inline void Scene::updateState()
 		{
 			Game::instance().keyReleased((char)112);
 			this->state = Scene::State::PLAY;
-			this->initPlay(1);
+			this->initPlay(1, lives);
 		}
 		else if (Game::instance().getKey((char)99)) //press c
 		{
@@ -288,6 +337,14 @@ inline void Scene::updateState()
 			Game::instance().keyReleased((char)98);
 			this->state = Scene::State::MENU;
 			this->initMenu();
+		}
+	}
+	else if (this->state == Scene::State::OVER) 
+	{
+		if (Game::instance().getKey((char)98))
+		{
+			Game::instance().keyReleased((char)98);
+			Game::instance().init(3, 0);
 		}
 	}
 }
