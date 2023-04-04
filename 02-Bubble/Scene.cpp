@@ -12,7 +12,8 @@
 
 Scene::Scene()
 {
-
+	menu = new Menu;
+	play = new Play;
 }
 
 Scene::~Scene()
@@ -122,12 +123,12 @@ void Scene::render()
 
 void Scene::initPlay(int level)
 {
-	this->play.init(level);
+	this->play->init(level);
 }
 
 void Scene::initMenu()
 {
-	this->menu.init();
+	menu->init();
 }
 
 void Scene::initContr()
@@ -143,12 +144,12 @@ void Scene::initCredits()
 
 void Scene::updatePlay(int deltaTime)
 {
-	this->play.update(deltaTime);
+	play->update(deltaTime);
 
 }
 void Scene::updateMenu(int deltaTime)
 {
-	this->menu.update(deltaTime);
+	menu->update(deltaTime);
 
 }
 
@@ -165,12 +166,12 @@ void Scene::updateCredits(int deltaTime)
 
 void Scene::renderPlay()
 {
-	this->play.render();
+	play->render();
 
 }
 void Scene::renderMenu()
 {
-	this->menu.render();
+	menu->render();
 
 }
 void Scene::renderContr()
@@ -180,6 +181,9 @@ void Scene::renderContr()
 void Scene::renderCredits()
 {
 	this->credits.render();
+}
+void Scene::setMenu() {
+	this->state = Scene::State::MENU;
 }
 inline void Scene::updateState()
 {
@@ -197,7 +201,7 @@ inline void Scene::updateState()
 			Game::instance().keyReleased((char)109);
 			this->initPlay(1);
 		}
-		else if (this->play.getLevel() == 1)
+		else if (this->play->getLevel() == 1)
 			
 			{
 			if (Game::instance().getKey((char)50)) //press 2
@@ -214,7 +218,7 @@ inline void Scene::updateState()
 			}
 			
 		}
-		else if (this->play.getLevel() == 2) //press 2
+		else if (this->play->getLevel() == 2) //press 2
 		{
 			if (Game::instance().getKey((char)49))
 			{
@@ -230,7 +234,7 @@ inline void Scene::updateState()
 			}
 			
 		}
-		else if (this->play.getLevel() == 3) //press 3
+		else if (this->play->getLevel() == 3) //press 3
 		{
 			if (Game::instance().getKey((char)49))
 			{

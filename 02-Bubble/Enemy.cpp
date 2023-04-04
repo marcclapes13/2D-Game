@@ -19,8 +19,10 @@ Enemy::~Enemy() {
 	}
 }
 
-void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Player* target, int typeOf, int direccio, BulletManager* bulletManager)
+void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Player* target, int typeOf, int direccio, int level, int nEnemy, BulletManager* bulletManager)
 {
+	lvl = level;
+	numEnemy = nEnemy;
 	dir = direccio;
 	typeofEnemy = typeOf;
 	cooldown = 75;
@@ -32,24 +34,26 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.33f, 0.5f), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(2);
 
-			sprite->setAnimationSpeed(MOVE_RIGHT, 8);
-			sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.0f));
-			sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.33f, 0.0f));
-			sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.67f, 0.0f));
+		sprite->setAnimationSpeed(MOVE_RIGHT, 8);
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.0f));
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.33f, 0.0f));
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.67f, 0.0f));
 
-			sprite->setAnimationSpeed(MOVE_LEFT, 8);
-			sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f, 0.5f));
-			sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.33f, 0.5f));
-			sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.67f, 0.5f));
+		sprite->setAnimationSpeed(MOVE_LEFT, 8);
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f, 0.5f));
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.33f, 0.5f));
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.67f, 0.5f));
 
-		if (dir == 0) {
-			
-			cooldown = 70;
-		}
-		else {
+		
+			if (dir == 0) {
 
-			cooldown = 0;
-		}
+				cooldown = 70;
+			}
+			else {
+
+				cooldown = 0;
+			}
+		
 		sprite->changeAnimation(0);
 		size.x = 32;
 		size.y = 32;
@@ -90,14 +94,15 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		sprite->addKeyframe(MOVE_RIGHT_AVION, glm::vec2(0.5f, 0.25f));
 		sprite->addKeyframe(MOVE_RIGHT_AVION, glm::vec2(0.75f, 0.25f));
 
+		
+			if (dir == 0) {
+				cooldown = 0;
+			}
+			else {
+				cooldown = 85;
 
-		if (dir == 0) {
-			cooldown = 0;
-		}
-		else {
-			cooldown = 85;
-			
-		}
+			}
+		
 		sprite->changeAnimation(0);
 		size.x = 32;
 		size.y = 32;
@@ -124,106 +129,107 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		break;
 	}
 	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
 	bulletM = bulletManager;
 }
 
 void Enemy::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-	switch (typeofEnemy) {
-	case (PUÑETAZOS):
-		if (cooldown > 0) {
-			if (sprite->animation() != MOVE_RIGHT)
-				sprite->changeAnimation(MOVE_RIGHT);
-			posEnemy.x += 2;
-			cooldown--;
-			
-		}
-		else {
-			if (sprite->animation() != MOVE_LEFT)
-				sprite->changeAnimation(MOVE_LEFT);
-			posEnemy.x -= 2;
-			--cooldown;
-		}
-		if (cooldown == -70) {
-			cooldown = 70;
-		}
-		break;
-	case (DOCTOR):
-		if (transform > 0) {
+	
+		switch (typeofEnemy) {
+		case (PUÑETAZOS):
 			if (cooldown > 0) {
-				if (sprite->animation() != MOVE_LEFT)
-					sprite->changeAnimation(MOVE_LEFT);
-				posEnemy.x += 2;
-				cooldown--;
-			}
-			else {
 				if (sprite->animation() != MOVE_RIGHT)
 					sprite->changeAnimation(MOVE_RIGHT);
+				posEnemy.x += 2;
+				cooldown--;
+
+			}
+			else {
+				if (sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
 				posEnemy.x -= 2;
 				--cooldown;
 			}
-			if (cooldown == -85) {
-				cooldown = 85;
+			if (cooldown == -70) {
+				cooldown = 70;
 			}
-			--transform;
-		}
-		else if (transform > -10) {
-			if (sprite->animation() != TRANSFORM1) {
-				sprite->changeAnimation(TRANSFORM1);
+			break;
+		case (DOCTOR):
+			if (transform > 0) {
+				if (cooldown > 0) {
+					if (sprite->animation() != MOVE_LEFT)
+						sprite->changeAnimation(MOVE_LEFT);
+					posEnemy.x += 2;
+					cooldown--;
+				}
+				else {
+					if (sprite->animation() != MOVE_RIGHT)
+						sprite->changeAnimation(MOVE_RIGHT);
+					posEnemy.x -= 2;
+					--cooldown;
+				}
+				if (cooldown == -85) {
+					cooldown = 85;
+				}
+				--transform;
 			}
-			--transform;
-		}
-		else if (transform > -20) {
-			if (sprite->animation() != TRANSFORM2) {
-				sprite->changeAnimation(TRANSFORM2);
+			else if (transform > -10) {
+				if (sprite->animation() != TRANSFORM1) {
+					sprite->changeAnimation(TRANSFORM1);
+				}
+				--transform;
 			}
-			--transform;
-		}
-		else if (transform > -30) {
-			if (sprite->animation() != TRANSFORM3) {
-				sprite->changeAnimation(TRANSFORM3);
+			else if (transform > -20) {
+				if (sprite->animation() != TRANSFORM2) {
+					sprite->changeAnimation(TRANSFORM2);
+				}
+				--transform;
 			}
-			--transform;
-		}
-		else if (transform > -40) {
-			if (sprite->animation() != TRANSFORM4) {
-				sprite->changeAnimation(TRANSFORM4);
+			else if (transform > -30) {
+				if (sprite->animation() != TRANSFORM3) {
+					sprite->changeAnimation(TRANSFORM3);
+				}
+				--transform;
 			}
-			--transform;
-		}
-		else {
-			size.y = 22;
-			transformado = true;
-			if (cooldown > 0) {
-				if (sprite->animation() != MOVE_RIGHT_AVION)
-					sprite->changeAnimation(MOVE_RIGHT_AVION);
-				posEnemy.x += 0.2;
-				cooldown--;
+			else if (transform > -40) {
+				if (sprite->animation() != TRANSFORM4) {
+					sprite->changeAnimation(TRANSFORM4);
+				}
+				--transform;
 			}
 			else {
-				if (sprite->animation() != MOVE_LEFT_AVION)
-					sprite->changeAnimation(MOVE_LEFT_AVION);
-				posEnemy.x -= 0.2;
-				--cooldown;
+				size.y = 22;
+				transformado = true;
+				if (cooldown > 0) {
+					if (sprite->animation() != MOVE_RIGHT_AVION)
+						sprite->changeAnimation(MOVE_RIGHT_AVION);
+					posEnemy.x += 0.2;
+					cooldown--;
+				}
+				else {
+					if (sprite->animation() != MOVE_LEFT_AVION)
+						sprite->changeAnimation(MOVE_LEFT_AVION);
+					posEnemy.x -= 0.2;
+					--cooldown;
+				}
+				if (cooldown == -1000) {
+					cooldown = 1000;
+				}
 			}
-			if (cooldown == -1000) {
-				cooldown = 1000;
+			break;
+
+		case (ARMADO):
+
+			soldierShoot();
+			for (int i = 0; i < bulletList.size(); ++i) {
+				if (bulletList[i] != NULL)
+					bulletList[i]->update(deltaTime);
 			}
+			break;
+
 		}
-		break;
-
-	case (ARMADO):
-
-
-		soldierShoot();
-		for (int i = 0; i < bulletList.size(); ++i) {
-			bulletList[i]->update(deltaTime);
-		}
-		break;
-
-	}
+	
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
 	
@@ -242,7 +248,7 @@ void Enemy::soldierShoot() {
 			Bullet* new_bull;
 			new_bull = new Bullet;
 			new_bull->setTileMap(map);
-			new_bull->createBullet(posEnemy.x+50, posEnemy.y+20, 1, *aux, 1.0f);
+			new_bull->createBullet(posEnemy.x+64, posEnemy.y+20, 1, *aux, 1.0f);
 			bulletList.push_back(new_bull);
 			cooldown = 150;
 			
@@ -251,7 +257,7 @@ void Enemy::soldierShoot() {
 			Bullet* new_bull;
 			new_bull = new Bullet;
 			new_bull->setTileMap(map);
-			new_bull->createBullet(posEnemy.x+20, posEnemy.y+20, 0, *aux, 1.0f);
+			new_bull->createBullet(posEnemy.x+22, posEnemy.y+20, 0, *aux, 1.0f);
 			bulletList.push_back(new_bull);
 			cooldown = 150;
 		}

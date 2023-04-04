@@ -19,7 +19,47 @@
 #define DOCTOR 1
 #define ARMADO 2
 
+enum {
+	Vida
+};
+
 Play::Play()
+{
+	map = NULL;
+	player = NULL;
+	
+	for (int i = 0; i < enemyList.size(); ++i) {
+		if (enemyList[i] != NULL) {
+			enemyList[i]->~Enemy();
+		}
+	}
+	enemyList.clear();
+	elementList.clear();
+	vides = 3;
+}
+
+Play::~Play()
+{
+	if (map != NULL)
+		delete map;
+	if (player != NULL)
+		delete player;
+
+	for (int i = 0; i < enemyList.size(); ++i){
+		if (enemyList[i] != NULL)
+			enemyList[i]->~Enemy();
+	}
+	for (int i = 0; i < elementList.size(); ++i) {
+		if (elementList[i] != NULL)
+			elementList[i]-> ~Elements();
+	}
+	
+	//if (spriteBackground != NULL)
+		//delete spriteBackground;
+
+}
+
+void Play::init(int i)
 {
 	map = NULL;
 	player = NULL;
@@ -30,101 +70,63 @@ Play::Play()
 		}
 	}
 	enemyList.clear();
-
-}
-
-Play::~Play()
-{
-	if (map != NULL)
-		delete map;
-	if (player != NULL)
-		delete player;
-	if (spritePuerta != NULL)
-		delete spritePuerta;
-
-	for (int i = 0; i < enemyList.size(); ++i){
-		if (enemyList[i] != NULL)
-			enemyList[i]->~Enemy();
+		
+	level = i;
+	this->initShaders();
+		
+	switch (level)
+	{
+	case 1:
+	{	
+		this->state = Play::State::LEVEL1;
+		map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+		break;
 	}
-	//if (spriteBackground != NULL)
-		//delete spriteBackground;
-}
+	case 2:
+	{
+		this->state = Play::State::LEVEL2;
+		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+		break;
+	}
+	case 3:
+	{
+		this->state = Play::State::LEVEL3;
+		map = TileMap::createTileMap("levels/level03.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+		break;
+	}
+	case 4:
+		player->setPosition(glm::vec2(50, 50));
+		break;
+	default:
+	{
+		std::cerr << "[PLAY::init] wrong level number" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+		
+	}
 
-void Play::init(int i)
-{
-		map = NULL;
-		player = NULL;
-		spritePuerta = NULL;
-		for (int i = 0; i < enemyList.size(); ++i) {
-			if (enemyList[i] != NULL) {
-				enemyList[i]->~Enemy();
-			}
-		}
-		for (int i = 0; i < elementList.size(); ++i) {
-			if (elementList[i] != NULL) {
-				elementList[i]->~Elements();
-			}
-		}
-		enemyList.clear();
-		elementList.clear();
-	    level = i;
-		this->initShaders();
-		
-		switch (level)
-		{
-		case 1:
-		{
-			
-			this->state = Play::State::LEVEL1;
-			map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-			break;
-		}
-		case 2:
-		{
-			this->state = Play::State::LEVEL2;
-			map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-			break;
-		}
-		case 3:
-		{
-			this->state = Play::State::LEVEL3;
-			map = TileMap::createTileMap("levels/level03.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-			break;
-		}
-		case 4:
-			player->setPosition(glm::vec2(50, 50));
-			break;
-		default:
-		{
-			std::cerr << "[PLAY::init] wrong level number" << std::endl;
-			exit(EXIT_FAILURE);
-		}
-		
-		}
-
-		initElements();
-		player = new Player();
-		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-		player->setTileMap(map);
-		initEnemies();
-		
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
-		currentTime = 0.0f;
+	player = new Player();
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	player->setTileMap(map);
+	initEnemies();
+	initElements();
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	currentTime = 0.0f;
 }
 
 void Play::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	
-	if (!immunitat) 
 		checkHits();
 	player->update(deltaTime);
+	
 	for (int i = 0; i < int(elementList.size()); ++i)
 		elementList[i]->update(deltaTime);
+	
 	for (int i = 0; i < int(enemyList.size()); ++i)
 		enemyList[i]->update(deltaTime);
-	
 
 
 }
@@ -205,6 +207,38 @@ void Play::setLevel(int lev) {
 
 void Play::initEnemies() {
 	if (level == 1) {
+		int number_of_enemies = 5;
+		for (int i = 0; i < number_of_enemies; ++i) {
+			int enemy_x;
+			int enemy_y;
+			int typeofEnemy;
+			int direccio;
+			switch (i + 1) {
+			case 1:
+				enemy_x = 2; enemy_y = 24; typeofEnemy = PUÑETAZOS, direccio = 0;
+				break;
+			case 2:
+				enemy_x = 32; enemy_y = 24; typeofEnemy = PUÑETAZOS, direccio = 1;
+				break;
+			case 3:
+				enemy_x = 6; enemy_y = 16; typeofEnemy = PUÑETAZOS, direccio = 1;
+				break;
+			case 4:
+				enemy_x = 9; enemy_y = 8; typeofEnemy = PUÑETAZOS, direccio = 1;
+				break;
+			case 5:
+				enemy_x = 19; enemy_y = 12; typeofEnemy = PUÑETAZOS, direccio = 1;
+				break;
+			}
+			Enemy* enemy_aux;
+			enemy_aux = new Enemy();
+			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio, level, i+1, &bulletManager);
+			enemy_aux->setTileMap(map);
+			enemy_aux->setPosition(glm::vec2(enemy_x * map->getTileSize(), enemy_y * map->getTileSize()));
+			enemyList.push_back(enemy_aux);
+		}
+	}
+	else if (level == 3) {
 		int number_of_enemies = 6; //cuantos enemigos hay en el nivel
 		for (int i = 0; i < number_of_enemies; ++i) {
 			int enemy_x;
@@ -233,7 +267,7 @@ void Play::initEnemies() {
 			}
 			Enemy* enemy_aux;
 			enemy_aux = new Enemy();
-			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio, &bulletManager);
+			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio, level, i+1, &bulletManager);
 			enemy_aux->setTileMap(map);
 			enemy_aux->setPosition(glm::vec2(enemy_x * map->getTileSize(), enemy_y * map->getTileSize()));
 			enemyList.push_back(enemy_aux);
@@ -241,16 +275,37 @@ void Play::initEnemies() {
 	}
 }
 void Play::initElements() {
-	if (level == 1) {
-		Elements* element_aux;
-		element_aux = new Elements();
-		int element_porta = 0;
-		element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, element_porta);
-		element_aux->setTileMap(map);
-		element_aux->setPosition(glm::vec2(25 * map->getTileSize(), 5 * map->getTileSize()));
-		elementList.push_back(element_aux);
+	
+	if (level == 3) {
+		int despx = 25;
+		int despy = 5;
+		int num_elem = 4;
+		for (int i = 0; i < num_elem; ++i) {
+			switch (i + 1) {
+			case 1:
+				despx = 4, despy = 0;
+				break;
+			case 2:
+				despx = 3, despy = 0;
+				break;
+			case 3:
+				despx = 2, despy = 0;
+				break;
+			case 4:
+				despx = 25, despy = 5;
+				break;
+			}
+
+			Elements* element_aux;
+			element_aux = new Elements();
+			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, i);
+			element_aux->setTileMap(map);
+			element_aux->setPosition(glm::vec2(despx * map->getTileSize(), despy * map->getTileSize()));
+			elementList.push_back(element_aux);
+		}
 	}
 }
+
 void Play::checkHits() {
 	for (int j = 0; j < int(enemyList.size()); ++j) {
 		if (enemyList[j]->return_type() != 2) {
@@ -259,8 +314,17 @@ void Play::checkHits() {
 			bool xocaY = (((enemyList[j]->ret_pos().y + enemyList[j]->ret_size().y) >= (player->ret_pos().y)) &&
 				(((player->ret_pos().y) + player->ret_size().y) >= enemyList[j]->ret_pos().y));;
 			if (xocaX && xocaY) {
-				this->init(level);
+				--vides;
+				if (vides == 0) {
+					Game::instance().init();
+				}
+				else {
+					elementList[0] = NULL;
+					elementList.erase(elementList.begin());
+					player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+				}
 			}
+
 		}
 		else {
 			vector<Bullet*> activeBullets = enemyList[j]->bulletList;
@@ -270,8 +334,15 @@ void Play::checkHits() {
 				bool balaY = (((activeBullets[i]->ret_pos().y + activeBullets[i]->ret_size().y) >= (player->ret_pos().y)) &&
 					(((player->ret_pos().y) + player->ret_size().y) >= activeBullets[i]->ret_pos().y));
 				if (balaX && balaY) {
-					init(level);
-					activeBullets[i]->~Bullet();
+					--vides;
+					if (vides == 0) {
+						Game::instance().init();
+					}
+					else {
+						elementList.erase(elementList.begin());
+						player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+					}
+					activeBullets[i] = NULL;
 					activeBullets.erase(activeBullets.begin() + i);
 				}
 			}

@@ -29,7 +29,7 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
-
+	void setMenu();
 private:
 	
 	void initPlay(int level);
@@ -51,8 +51,9 @@ private:
 private:
 
 	bool immune = false;
-	Menu menu;
-	Play play;
+	int lives;
+	Menu* menu;
+	Play* play;
 	Control contr;
 	Credits credits;
 	Texture textura;

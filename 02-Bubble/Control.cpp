@@ -15,7 +15,7 @@ void Control::init() {
 
 	this->initShader();
 	projection = glm::ortho(0.f, float(800), float(750), 0.f);
-	this->textureControls.loadFromFile("images/Menu/controls.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	this->textureControls.loadFromFile("images/Menus/controls.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	this->spriteControls = Sprite::createSprite(glm::ivec2(800, 750), glm::vec2(1.f, 1.f), &this->textureControls, &this->shader);
 	this->spriteControls->setNumberAnimations(0);
 	this->spriteControls->setPosition(glm::vec2(0.f, 0.f));

@@ -31,6 +31,7 @@ public:
 
 	void initEnemies();
 	void initElements();
+	void initVides();
 	void checkHits();
 
 private:
@@ -43,6 +44,7 @@ private:
 	bool immunitat;
 	Play::State state;
 	BulletManager bulletManager;
+	int vides;
 	Level levels;
 	int level = 1;
 	TileMap* map;

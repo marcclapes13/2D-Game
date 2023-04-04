@@ -16,7 +16,7 @@ class Enemy
 public:
 
 	~Enemy();
-	void init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Player* target, int typeOf, int direccio, BulletManager* bulletManager);
+	void init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Player* target, int typeOf, int direccio, int level, int nEnemy, BulletManager* bulletManager);
 	void update(int deltaTime);
 	void render();
 	void setTileMap(TileMap* tileMap);
@@ -31,7 +31,7 @@ public:
 
 private:
 	bool transformado;
-	int typeofEnemy, health, cooldown, dir, transform;
+	int typeofEnemy, health, cooldown, dir, transform, lvl, numEnemy;
 	glm::vec2 posEnemy, size, tileMapDispl;
 	Player* player;
 	Texture spritesheet;
