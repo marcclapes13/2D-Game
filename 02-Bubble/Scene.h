@@ -27,13 +27,14 @@ public:
 	Scene();
 	~Scene();
 
-	void init(int vides, int estat);
+	void init(int vides, int estat, int lvl);
 	void update(int deltaTime);
 	void render();
 	void setMenu();
+	void initPlay(int level, int lives);
 private:
 	
-	void initPlay(int level, int lives);
+	
 	void initMenu();
 	void initSelector();
 	void initContr();
@@ -56,6 +57,7 @@ private:
 
 private:
 
+	int level;
 	bool immune;
 	int lives;
 	Menu* menu;

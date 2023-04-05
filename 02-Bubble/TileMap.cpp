@@ -47,6 +47,7 @@ void TileMap::free()
 
 bool TileMap::loadLevel(const string &levelFile)
 {
+	nPintat = 0;
 	ifstream fin;
 	string line, tilesheetFile;
 	stringstream sstream;
@@ -221,6 +222,7 @@ void TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size) {
 		if (map[y * mapSize.x + x] == 2)
 		{
 			map[y * mapSize.x + x] += 1;
+			nPintat += 1;
 		}
 	}
 	reloadArrays();
@@ -284,3 +286,6 @@ bool TileMap::collisionMoveDownEnemy(const glm::ivec2& pos, const glm::ivec2& si
 
 }
 
+int TileMap::retPintat() {
+	return nPintat;
+}

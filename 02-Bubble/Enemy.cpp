@@ -526,7 +526,7 @@ void Enemy::soldierShoot() {
 			new_bull->setTileMap(map);
 			new_bull->createBullet(posEnemy.x+64, posEnemy.y+20, 1, *aux, 1.0f);
 			bulletList.push_back(new_bull);
-			cooldown = 150;
+			cooldown = 210;
 			
 		}
 		else {
@@ -535,7 +535,7 @@ void Enemy::soldierShoot() {
 			new_bull->setTileMap(map);
 			new_bull->createBullet(posEnemy.x+22, posEnemy.y+20, 0, *aux, 1.0f);
 			bulletList.push_back(new_bull);
-			cooldown = 150;
+			cooldown = 210;
 		}
 	}
 	else --cooldown;

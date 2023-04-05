@@ -15,6 +15,10 @@ public:
 	glm::vec2 ret_pos();
 	glm::vec2 ret_size();
 
+	void setPorta1();
+	void setPorta2();
+	void setPorta3();
+
 private:
 	Texture spritesheet;
 	Sprite* sprite;

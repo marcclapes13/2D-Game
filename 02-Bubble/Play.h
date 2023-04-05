@@ -37,15 +37,29 @@ public:
 	void setImmunitatFalse();
 	void setImmunitatTrue();
 	int getLives();
+	bool porta;
 
 private:
 	void initShaders();
 	inline void updateState();
 	void checkBullets();
+	bool touchStop();
+	bool touchKey();
+	bool checkPorta();
 	
 
 private:
 
+	bool portaOberta;
+	bool eliminat;
+	bool keyActive;
+	bool stopActive;
+	int countStop;
+	int portaCoolDown;
+	bool key;
+	bool gema;
+	bool invulnerable;
+	bool stop;
 	bool immunitat;
 	Play::State state;
 	BulletManager bulletManager;

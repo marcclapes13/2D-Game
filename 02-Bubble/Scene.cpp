@@ -26,8 +26,9 @@ Scene::~Scene()
 }
 
 
-void Scene::init(int vides, int estat)
+void Scene::init(int vides, int estat, int lvl)
 {
+	level = lvl;
 	immune = false;
 	switch (estat) {
 	case 0:
@@ -85,6 +86,13 @@ void Scene::init(int vides, int estat)
 
 void Scene::update(int deltaTime)
 {
+	if (play->porta && play->getLevel() != 3) {
+		initPlay(play->getLevel() + 1, play->getLives());
+	}
+	else if (play->porta) {
+		this->state = Scene::State::CRED;
+		this->initCredits();
+	}
 	this->updateState();
 	switch (this->state)
 	{

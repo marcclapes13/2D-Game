@@ -39,6 +39,8 @@ public:
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool deadMoveDown(const glm::ivec2& pos, const glm::ivec2& size) const;
 
+	int retPintat();
+
 	
 	
 private:
@@ -58,6 +60,8 @@ private:
 	int *map;
 	glm::vec2 oldMinCoords;
 	ShaderProgram oldShader;
+	int nPintat;
+
 };
 
 

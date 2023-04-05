@@ -8,7 +8,7 @@ void Game::init(int vides, int estat)
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	scene = new Scene;
-	scene->init(vides, estat);
+	scene->init(vides, estat, 1);
 }
 
 bool Game::update(int deltaTime)
