@@ -29,6 +29,15 @@ public:
 	void update(int deltaTime);
 	void render();
 
+	void cursorPlay();
+	void cursorControl();
+	void cursorCredits();
+
+	glm::ivec2 cursorPos();
+	void cursorSetSelect();
+
+	glm::ivec2 cursorPosition;
+
 
 private:
 
@@ -40,7 +49,7 @@ private:
 
 	Sprite* spriteMenu;
 	Sprite* cursor;
-
+	
 
 	Texture textureMenu;
 	Texture textureCursor;

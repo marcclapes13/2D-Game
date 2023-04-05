@@ -1,10 +1,21 @@
 #include "Menu.h"
+#include <cmath>
+#include <ctime>
+
+enum Cursor{
+	NORMAL, SELECT
+};
+
+void delay(int secs) {
+	for (int i = (time(NULL) + secs); time(NULL) != i; time(NULL));
+}
 
 Menu::Menu()
 {
 	this->spriteMenu = NULL;
-
-
+	cursor = NULL;
+	cursorPosition.x = 0;
+	cursorPosition.y = 0;
 }
 
 Menu::~Menu()
@@ -23,8 +34,20 @@ void Menu::init() {
 	this->spriteMenu->setNumberAnimations(0);
 	this->spriteMenu->setPosition(glm::vec2(0.f, 0.f));
 	textureCursor.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	cursor = Sprite::createSprite(glm::ivec2(100, 100), glm::vec2(1.0f, 1.0f), &textureCursor, &shader);
-	cursor->setPosition(glm::vec2(250.0f, 300.0f));
+	cursor = Sprite::createSprite(glm::ivec2(120, 100), glm::vec2(1.f, 0.5f), &textureCursor, &shader);
+	cursor->setNumberAnimations(2);
+
+	cursor->setAnimationSpeed(NORMAL, 8);
+	cursor->addKeyframe(NORMAL, glm::vec2(0.0f, 0.5f));
+
+	cursor->setAnimationSpeed(SELECT, 8);
+	cursor->addKeyframe(SELECT, glm::vec2(0.0f, 0.f));
+
+	cursor->changeAnimation(0);
+
+	cursorPosition.x = 220.f;
+	cursorPosition.y = 300.f;
+	cursor->setPosition(cursorPosition);
 }
 
 void Menu::update(int deltaTime)
@@ -80,5 +103,30 @@ void Menu::initShader()
 	fShader.free();
 }
 
+void Menu::cursorPlay() {
+	cursorPosition.x = 220.f;
+	cursorPosition.y = 300.f;
+	cursor->setPosition(cursorPosition);
+}
+
+void Menu::cursorControl() {
+	cursorPosition.x = 220.f;
+	cursorPosition.y = 430.f;
+	cursor->setPosition(cursorPosition);
+}
+
+void Menu::cursorCredits() {
+	cursorPosition.x = 220.f;
+	cursorPosition.y = 560.f;
+	cursor->setPosition(cursorPosition);
+}
+
+glm::ivec2 Menu::cursorPos() {
+	return glm::ivec2(cursorPosition.x,cursorPosition.y);
+}
+void Menu::cursorSetSelect() {
+	cursor->changeAnimation(SELECT);
+	
+}
 
 

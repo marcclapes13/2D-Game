@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <ctime>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
@@ -9,6 +10,8 @@
 
 #define INIT_PLAYER_X_TILES 4
 #define INIT_PLAYER_Y_TILES 25
+
+
 
 Scene::Scene()
 {
@@ -232,8 +235,7 @@ void Scene::renderOver()
 void Scene::setMenu() {
 	this->state = Scene::State::MENU;
 }
-inline void Scene::updateState()
-{
+inline void Scene::updateState() {
 	if (this->state == Scene::State::PLAY) 
 	{
 		if (Game::instance().getKey((char)98)) //press b
@@ -302,23 +304,57 @@ inline void Scene::updateState()
 
 	else if (this->state == Scene::State::MENU)
 	{
-		if (Game::instance().getKey((char)112)) //press p
+		if (Game::instance().getSpecialKey(GLUT_KEY_UP)) 
 		{
-			Game::instance().keyReleased((char)112);
-			this->state = Scene::State::PLAY;
-			this->initPlay(1, lives);
+			glm::ivec2 cursorPos = menu->cursorPos();
+			if (cursorPos != glm::ivec2(220.f, 300.f)) {
+				if (cursorPos == glm::ivec2(220.f, 430.f)) {
+					Game::instance().specialKeyReleased(GLUT_KEY_UP);
+					menu->cursorPlay();
+					
+				}
+				else {
+					Game::instance().specialKeyReleased(GLUT_KEY_UP);
+					menu->cursorControl();
+				}
+			}
+			
 		}
-		else if (Game::instance().getKey((char)99)) //press c
+		else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN))
 		{
-			Game::instance().keyReleased((char)99);
-			this->state = Scene::State::CONTR;
-			this->initContr();
+			glm::ivec2 cursorPos = menu->cursorPos();
+			if (cursorPos != glm::ivec2(220.f, 560.f)) {
+				if (cursorPos == glm::ivec2(220.f, 300.f)) {
+					Game::instance().specialKeyReleased(GLUT_KEY_DOWN);
+					menu->cursorControl();
+				}
+				else {
+					Game::instance().specialKeyReleased(GLUT_KEY_DOWN);
+					menu->cursorCredits();
+				}
+			
+			}
+			
 		}
-		else if (Game::instance().getKey((char)114)) //press r
-		{
-			Game::instance().keyReleased((char)114);
-			this->state = Scene::State::CRED;
-			this->initCredits();
+		else if (Game::instance().getKey(13)) {
+			glm::ivec2 cursorPos = menu->cursorPos();
+			if (cursorPos == glm::ivec2(220.f, 300.f)) {
+				Game::instance().keyReleased(13);
+				menu->cursorSetSelect();
+				
+				this->state = Scene::State::PLAY;
+				this->initPlay(1, lives);
+			}
+			else if (cursorPos == glm::ivec2(220.f, 430.f)) {
+				Game::instance().keyReleased(13);
+				this->state = Scene::State::CONTR;
+				this->initContr();
+			}
+			else {
+				Game::instance().keyReleased(13);
+				this->state = Scene::State::CRED;
+				this->initCredits();
+			}
 		}
 	}
 	else if (this->state == Scene::State::CONTR)

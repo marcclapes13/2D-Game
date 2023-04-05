@@ -252,7 +252,18 @@ void Enemy::update(int deltaTime)
 				}
 			}
 			break;
+		case (ARMADO):
+
+			soldierShoot();
+			for (int i = 0; i < bulletList.size(); ++i) {
+				if (bulletList[i] != NULL)
+					bulletList[i]->update(deltaTime);
+			}
+			break;
+
+		
 		}
+
 	}
 	else {
 		switch (typeofEnemy) {

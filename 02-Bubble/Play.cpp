@@ -334,6 +334,10 @@ void Play::initElements() {
 			case 4:
 				despx = 4, despy = 0;
 				break;
+
+			case 5:
+				despx = 5, despy = 0;
+				break;
 			}
 
 			Elements* element_aux;
@@ -393,7 +397,9 @@ void Play::initElements() {
 			case 4:
 				despx = 4, despy = 0;
 				break;
-
+			case 5:
+				despx = 5, despy = 0;
+				break;
 			}
 
 			Elements* element_aux;
@@ -496,12 +502,26 @@ void Play::checkHits() {
 }
 
 void Play::checkBullets() {
-	
+	if (level == 2) {
+		for (int j = 0; j < int(enemyList.size()); ++j) {
+			vector<Bullet*> activeBullets = enemyList[j]->bulletList;
+			for (int i = 0; i < activeBullets.size(); ++i) {
+				int posBulletx = activeBullets[i]->ret_pos().x;
+				int posBullety = activeBullets[i]->ret_pos().y;
+				if (map->collisionMoveLeft(glm::ivec2(posBulletx-40, posBullety), glm::ivec2(8, 4)) || map->collisionMoveRight(glm::ivec2(posBulletx-20, posBullety), glm::ivec2(8, 4))) {
+					activeBullets.erase(activeBullets.begin() + i);
+					enemyList[j]->bulletList = activeBullets;
+				}
+			}
+		}
+	}
 	if (level == 3) {
 		for (int j = 0; j < int(enemyList.size()); ++j) {
 			vector<Bullet*> activeBullets = enemyList[j]->bulletList;
 			for (int i = 0; i < activeBullets.size(); ++i) {
-				if ((activeBullets[i]->ret_pos().x > 18* map->getTileSize()) && (activeBullets[i]->ret_pos().x < 22* map->getTileSize())) {
+				int posBulletx = activeBullets[i]->ret_pos().x;
+				int posBullety = activeBullets[i]->ret_pos().y;
+				if (map->collisionMoveLeft(glm::ivec2(posBulletx - 40, posBullety), glm::ivec2(8, 4)) || map->collisionMoveRight(glm::ivec2(posBulletx - 20, posBullety), glm::ivec2(8, 4))) {
 					activeBullets.erase(activeBullets.begin() + i);
 					enemyList[j]->bulletList = activeBullets;
 				}
