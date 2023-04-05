@@ -35,7 +35,7 @@ public:
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	void collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size);
-	void collisionMoveDownEnemy(const glm::ivec2& pos, const glm::ivec2& size);
+	bool collisionMoveDownEnemy(const glm::ivec2& pos, const glm::ivec2& size);
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool deadMoveDown(const glm::ivec2& pos, const glm::ivec2& size) const;
 

@@ -47,24 +47,28 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		if (lvl == 1) {
 			switch (numEnemy) {
 			case 0:
-				cooldown = 70;
+				moveRight = true;
+				moveLeft = false;
 				
 				break;
 			case 1:
-				cooldown = 0;
+				moveLeft = true;
+				moveRight = false;
 				break;
 			case 2:
-				cooldown = 180;
+				
+				moveRight = true;
+				moveLeft = false;
 				break;
 			case 3:
 				moveRight = true;
 				moveLeft = false;
-				cooldown = 45;
+				
 				break;
 			case 4:
 				moveRight = true;
 				moveLeft = false;
-				cooldown = 45;
+				
 				break;
 
 			}
@@ -75,12 +79,12 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		}
 		else {
 			if (dir == 0) {
-
-				cooldown = 70;
+				moveRight = true;
+				moveLeft = false;
 			}
 			else {
-
-				cooldown = 0;
+				moveLeft = true;
+				moveRight = false;
 			}
 		}
 		
@@ -97,7 +101,7 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 		moveLeft = false;
 		moveRight = false;
 		transformado = false;
-		transform = 70; //630
+		transform = 630; 
 		spritesheet.loadFromFile("images/Personatges/Doctor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.25f, 0.20f), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(11);
@@ -162,11 +166,17 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 			sprite->setAnimationSpeed(STAND_LEFT, 8);
 			sprite->addKeyframe(STAND_LEFT, glm::vec2(0.5f, 0.0f));
 
-		if (dir == 0)
-			sprite->changeAnimation(STAND_RIGHT);
+			if (dir == 0) {
+				sprite->changeAnimation(STAND_RIGHT);
+				moveRight = true;
+				moveLeft = true;
+			}
 
-		else 
-			sprite->changeAnimation(STAND_LEFT);
+			else {
+				sprite->changeAnimation(STAND_LEFT);
+				moveRight = false;
+				moveLeft = true;
+			}
 		size.x = 32;
 		size.y = 32;
 		health = 7;
@@ -180,130 +190,30 @@ void Enemy::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	if (lvl == 1) {
-		switch (numEnemy) {
-		case 0:
-			
-			if (cooldown > 0) {
+		if (moveRight) {
+			if (!map->collisionMoveRight(glm::ivec2(posEnemy.x + 10, posEnemy.y), glm::ivec2(size.x, size.y)) && !map->collisionMoveDownEnemy(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y))) {
 				if (sprite->animation() != MOVE_RIGHT)
 					sprite->changeAnimation(MOVE_RIGHT);
 				posEnemy.x += 1;
 				cooldown--;
-				dir = 0;
 
 			}
 			else {
+				moveRight = false;
+				moveLeft = true;
+			}
+		}
+		else if (moveLeft) {
+			if (!map->collisionMoveLeft(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y)) && !map->collisionMoveDownEnemy(glm::ivec2(posEnemy.x - 1, posEnemy.y), glm::ivec2(size.x, size.y))) {
 				if (sprite->animation() != MOVE_LEFT)
 					sprite->changeAnimation(MOVE_LEFT);
 				posEnemy.x -= 1;
 				--cooldown;
-				dir = 1;
-			}
-			if (cooldown == -70) {
-				cooldown = 70;
-			}
-			break;
-		case 1:
-			if (cooldown > 0) {
-				if (sprite->animation() != MOVE_RIGHT)
-					sprite->changeAnimation(MOVE_RIGHT);
-				posEnemy.x += 1;
-				cooldown--;
-				dir = 0;
-
 			}
 			else {
-				if (sprite->animation() != MOVE_LEFT)
-					sprite->changeAnimation(MOVE_LEFT);
-				posEnemy.x -= 1;
-				--cooldown;
-				dir = 1;
+				moveRight = true;
+				moveLeft = false;
 			}
-			if (cooldown == -70) {
-				cooldown = 70;
-			}
-			break;
-		case 2:
-			/*if (moveRight) {
-				if (!map->collisionMoveDown(glm::ivec2(posEnemy.x + 10, posEnemy.y), glm::ivec2(size.x, size.y), int( & (posEnemy.y))) {
-					if (sprite->animation() != MOVE_RIGHT)
-						sprite->changeAnimation(MOVE_RIGHT);
-					posEnemy.x += 1;
-					cooldown--;
-
-				}
-				else {
-					moveRight = false;
-					moveLeft = true;
-				}
-			}
-			else if (moveLeft) {
-				if (!map->collisionMoveLeft(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y))) {
-					if (sprite->animation() != MOVE_LEFT)
-						sprite->changeAnimation(MOVE_LEFT);
-					posEnemy.x -= 1;
-					--cooldown;
-				}
-				else {
-					moveRight = true;
-					moveLeft = false;
-				}
-			}
-			break;
-			*/
-		case 3:
-			if (moveRight) {
-				if (!map->collisionMoveRight(glm::ivec2(posEnemy.x+10, posEnemy.y), glm::ivec2(size.x, size.y))) {
-					if (sprite->animation() != MOVE_RIGHT)
-						sprite->changeAnimation(MOVE_RIGHT);
-					posEnemy.x += 1;
-					cooldown--;
-
-				}
-				else {
-					moveRight = false;
-					moveLeft = true;
-				}
-			}
-			else if (moveLeft) {
-				if (!map->collisionMoveLeft(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y))) {
-					if (sprite->animation() != MOVE_LEFT)
-						sprite->changeAnimation(MOVE_LEFT);
-					posEnemy.x -= 1;
-					--cooldown;
-				}
-				else {
-					moveRight = true;
-					moveLeft = false;
-				}
-			}
-			break;
-		case 4:
-			if (moveRight) {
-				if (!map->collisionMoveRight(glm::ivec2(posEnemy.x+10, posEnemy.y), glm::ivec2(size.x, size.y))) {
-					if (sprite->animation() != MOVE_RIGHT)
-						sprite->changeAnimation(MOVE_RIGHT);
-					posEnemy.x += 1;
-					cooldown--;
-
-				}
-				else {
-					moveRight = false;
-					moveLeft = true;
-				}
-			}
-			else if (moveLeft) {
-				if (!map->collisionMoveLeft(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y))) {
-					if (sprite->animation() != MOVE_LEFT)
-						sprite->changeAnimation(MOVE_LEFT);
-					posEnemy.x -= 1;
-					--cooldown;
-				}
-				else {
-					moveRight = true;
-					moveLeft = false;
-				}
-			}
-			break;
 		}
 	}
 	else if (lvl == 2) {
@@ -312,21 +222,30 @@ void Enemy::update(int deltaTime)
 	else {
 		switch (typeofEnemy) {
 		case (PUÑETAZOS):
-			if (cooldown > 0) {
-				if (sprite->animation() != MOVE_RIGHT)
-					sprite->changeAnimation(MOVE_RIGHT);
-				posEnemy.x += 1;
-				cooldown--;
+			if (moveRight) {
+				if (!map->collisionMoveRight(glm::ivec2(posEnemy.x + 10, posEnemy.y), glm::ivec2(size.x, size.y)) && !map->collisionMoveDownEnemy(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y))) {
+					if (sprite->animation() != MOVE_RIGHT)
+						sprite->changeAnimation(MOVE_RIGHT);
+					posEnemy.x += 1;
+					cooldown--;
 
+				}
+				else {
+					moveRight = false;
+					moveLeft = true;
+				}
 			}
-			else {
-				if (sprite->animation() != MOVE_LEFT)
-					sprite->changeAnimation(MOVE_LEFT);
-				posEnemy.x -= 1;
-				--cooldown;
-			}
-			if (cooldown == -70) {
-				cooldown = 70;
+			else if (moveLeft) {
+				if (!map->collisionMoveLeft(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y)) && !map->collisionMoveDownEnemy(glm::ivec2(posEnemy.x - 1, posEnemy.y), glm::ivec2(size.x, size.y))) {
+					if (sprite->animation() != MOVE_LEFT)
+						sprite->changeAnimation(MOVE_LEFT);
+					posEnemy.x -= 1;
+					--cooldown;
+				}
+				else {
+					moveRight = true;
+					moveLeft = false;
+				}
 			}
 			break;
 		case (DOCTOR):

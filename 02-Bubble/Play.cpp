@@ -428,6 +428,7 @@ void Play::checkHits() {
 }
 
 void Play::checkBullets() {
+	
 	if (level == 3) {
 		for (int j = 0; j < int(enemyList.size()); ++j) {
 			vector<Bullet*> activeBullets = enemyList[j]->bulletList;
@@ -446,6 +447,9 @@ int Play::getLives() {
 	return vides;
 }
 
-void Play::setImmunitat(bool immune) {
-	immunitat = immune;
+void Play::setImmunitatFalse() {
+	immunitat = false;
+}
+void Play::setImmunitatTrue() {
+	immunitat = true;
 }

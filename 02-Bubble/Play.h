@@ -34,7 +34,8 @@ public:
 	void initVides();
 	void checkHits();
 	
-	void setImmunitat(bool immune);
+	void setImmunitatFalse();
+	void setImmunitatTrue();
 	int getLives();
 
 private:
