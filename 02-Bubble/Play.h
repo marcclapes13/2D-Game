@@ -50,6 +50,7 @@ private:
 
 private:
 
+	bool agafat;
 	bool portaOberta;
 	bool eliminat;
 	bool keyActive;

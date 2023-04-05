@@ -90,8 +90,7 @@ void Scene::update(int deltaTime)
 		initPlay(play->getLevel() + 1, play->getLives());
 	}
 	else if (play->porta) {
-		this->state = Scene::State::CRED;
-		this->initCredits();
+		Game::instance().init(3, 3);
 	}
 	this->updateState();
 	switch (this->state)
@@ -256,7 +255,7 @@ inline void Scene::updateState() {
 		{
 			Game::instance().keyReleased((char)103);
 			immune = !immune;
-			if (immune) play->setImmunitatFalse();
+			if (!immune) play->setImmunitatFalse();
 			else play->setImmunitatTrue();
 		}
 		else if (this->play->getLevel() == 1)
@@ -379,8 +378,7 @@ inline void Scene::updateState() {
 		if (Game::instance().getKey((char)98))
 		{
 			Game::instance().keyReleased((char)98);
-			this->state = Scene::State::MENU;
-			this->initMenu();
+			Game::instance().init(3, 0);
 		}
 	}
 	else if (this->state == Scene::State::OVER) 

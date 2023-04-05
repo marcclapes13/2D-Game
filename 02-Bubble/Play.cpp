@@ -66,6 +66,7 @@ Play::~Play()
 
 void Play::init(int i, int lives)
 {
+	agafat = false;
 	portaOberta = false;
 	porta = false;
 	portaCoolDown = 0;
@@ -161,7 +162,7 @@ void Play::update(int deltaTime)
 			eliminat = false;
 
 		}
-		if ((map->retPintat() == 70 || map->retPintat() == 71 || map->retPintat() == 72) && !eliminat) {
+		if ((map->retPintat() == 70 || map->retPintat() == 71 || map->retPintat() == 72) && !eliminat && !agafat) {
 			elementList.erase(elementList.begin());
 			eliminat = true;
 			countStop = 201;
@@ -253,6 +254,7 @@ void Play::update(int deltaTime)
 		if (countStop > 200) {
 			stopActive = false;
 			countStop = 201;
+			agafat = true;
 		}
 	}
 	// touchKey
