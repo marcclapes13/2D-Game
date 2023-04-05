@@ -57,9 +57,13 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 				cooldown = 180;
 				break;
 			case 3:
+				moveRight = true;
+				moveLeft = false;
 				cooldown = 45;
 				break;
 			case 4:
+				moveRight = true;
+				moveLeft = false;
 				cooldown = 45;
 				break;
 
@@ -178,10 +182,11 @@ void Enemy::update(int deltaTime)
 	if (lvl == 1) {
 		switch (numEnemy) {
 		case 0:
+			
 			if (cooldown > 0) {
 				if (sprite->animation() != MOVE_RIGHT)
 					sprite->changeAnimation(MOVE_RIGHT);
-				posEnemy.x += 2;
+				posEnemy.x += 1;
 				cooldown--;
 				dir = 0;
 
@@ -189,7 +194,7 @@ void Enemy::update(int deltaTime)
 			else {
 				if (sprite->animation() != MOVE_LEFT)
 					sprite->changeAnimation(MOVE_LEFT);
-				posEnemy.x -= 2;
+				posEnemy.x -= 1;
 				--cooldown;
 				dir = 1;
 			}
@@ -201,7 +206,7 @@ void Enemy::update(int deltaTime)
 			if (cooldown > 0) {
 				if (sprite->animation() != MOVE_RIGHT)
 					sprite->changeAnimation(MOVE_RIGHT);
-				posEnemy.x += 2;
+				posEnemy.x += 1;
 				cooldown--;
 				dir = 0;
 
@@ -209,7 +214,7 @@ void Enemy::update(int deltaTime)
 			else {
 				if (sprite->animation() != MOVE_LEFT)
 					sprite->changeAnimation(MOVE_LEFT);
-				posEnemy.x -= 2;
+				posEnemy.x -= 1;
 				--cooldown;
 				dir = 1;
 			}
@@ -218,57 +223,85 @@ void Enemy::update(int deltaTime)
 			}
 			break;
 		case 2:
-			if (cooldown > 0) {
-				if (sprite->animation() != MOVE_RIGHT)
-					sprite->changeAnimation(MOVE_RIGHT);
-				posEnemy.x += 2;
-				cooldown--;
+			/*if (moveRight) {
+				if (!map->collisionMoveDown(glm::ivec2(posEnemy.x + 10, posEnemy.y), glm::ivec2(size.x, size.y), int( & (posEnemy.y))) {
+					if (sprite->animation() != MOVE_RIGHT)
+						sprite->changeAnimation(MOVE_RIGHT);
+					posEnemy.x += 1;
+					cooldown--;
 
+				}
+				else {
+					moveRight = false;
+					moveLeft = true;
+				}
 			}
-			else {
-				if (sprite->animation() != MOVE_LEFT)
-					sprite->changeAnimation(MOVE_LEFT);
-				posEnemy.x -= 2;
-				--cooldown;
-			}
-			if (cooldown == -180) {
-				cooldown = 180;
+			else if (moveLeft) {
+				if (!map->collisionMoveLeft(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y))) {
+					if (sprite->animation() != MOVE_LEFT)
+						sprite->changeAnimation(MOVE_LEFT);
+					posEnemy.x -= 1;
+					--cooldown;
+				}
+				else {
+					moveRight = true;
+					moveLeft = false;
+				}
 			}
 			break;
+			*/
 		case 3:
-			if (cooldown > 0) {
-				if (sprite->animation() != MOVE_RIGHT)
-					sprite->changeAnimation(MOVE_RIGHT);
-				posEnemy.x += 2;
-				cooldown--;
+			if (moveRight) {
+				if (!map->collisionMoveRight(glm::ivec2(posEnemy.x+10, posEnemy.y), glm::ivec2(size.x, size.y))) {
+					if (sprite->animation() != MOVE_RIGHT)
+						sprite->changeAnimation(MOVE_RIGHT);
+					posEnemy.x += 1;
+					cooldown--;
 
+				}
+				else {
+					moveRight = false;
+					moveLeft = true;
+				}
 			}
-			else {
-				if (sprite->animation() != MOVE_LEFT)
-					sprite->changeAnimation(MOVE_LEFT);
-				posEnemy.x -= 2;
-				--cooldown;
-			}
-			if (cooldown == -45) {
-				cooldown = 45;
+			else if (moveLeft) {
+				if (!map->collisionMoveLeft(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y))) {
+					if (sprite->animation() != MOVE_LEFT)
+						sprite->changeAnimation(MOVE_LEFT);
+					posEnemy.x -= 1;
+					--cooldown;
+				}
+				else {
+					moveRight = true;
+					moveLeft = false;
+				}
 			}
 			break;
 		case 4:
-			if (cooldown > 0) {
-				if (sprite->animation() != MOVE_RIGHT)
-					sprite->changeAnimation(MOVE_RIGHT);
-				posEnemy.x += 2;
-				cooldown--;
+			if (moveRight) {
+				if (!map->collisionMoveRight(glm::ivec2(posEnemy.x+10, posEnemy.y), glm::ivec2(size.x, size.y))) {
+					if (sprite->animation() != MOVE_RIGHT)
+						sprite->changeAnimation(MOVE_RIGHT);
+					posEnemy.x += 1;
+					cooldown--;
 
+				}
+				else {
+					moveRight = false;
+					moveLeft = true;
+				}
 			}
-			else {
-				if (sprite->animation() != MOVE_LEFT)
-					sprite->changeAnimation(MOVE_LEFT);
-				posEnemy.x -= 2;
-				--cooldown;
-			}
-			if (cooldown == -45) {
-				cooldown = 45;
+			else if (moveLeft) {
+				if (!map->collisionMoveLeft(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y))) {
+					if (sprite->animation() != MOVE_LEFT)
+						sprite->changeAnimation(MOVE_LEFT);
+					posEnemy.x -= 1;
+					--cooldown;
+				}
+				else {
+					moveRight = true;
+					moveLeft = false;
+				}
 			}
 			break;
 		}
@@ -282,14 +315,14 @@ void Enemy::update(int deltaTime)
 			if (cooldown > 0) {
 				if (sprite->animation() != MOVE_RIGHT)
 					sprite->changeAnimation(MOVE_RIGHT);
-				posEnemy.x += 2;
+				posEnemy.x += 1;
 				cooldown--;
 
 			}
 			else {
 				if (sprite->animation() != MOVE_LEFT)
 					sprite->changeAnimation(MOVE_LEFT);
-				posEnemy.x -= 2;
+				posEnemy.x -= 1;
 				--cooldown;
 			}
 			if (cooldown == -70) {

@@ -28,17 +28,23 @@ public:
 	void render() const;
 	void free();
 	
+	void paint();
 	int getTileSize() const { return tileSize; }
 
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
+	void collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size);
+	void collisionMoveDownEnemy(const glm::ivec2& pos, const glm::ivec2& size);
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
-	bool deadMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
+	bool deadMoveDown(const glm::ivec2& pos, const glm::ivec2& size) const;
+
+	
 	
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+	void reloadArrays();
 
 private:
 	GLuint vao;
@@ -50,7 +56,8 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
-
+	glm::vec2 oldMinCoords;
+	ShaderProgram oldShader;
 };
 
 

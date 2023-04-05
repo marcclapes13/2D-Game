@@ -98,8 +98,11 @@ bool TileMap::loadLevel(const string &levelFile)
 	return true;
 }
 
+
 void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 {
+	oldShader = program;
+	oldMinCoords = minCoords;
 	int tile;
 	glm::vec2 posTile, texCoordTile[2], halfTexel;
 	vector<float> vertices;
@@ -188,14 +191,15 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	int x0, x1, y;
 	
 	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
-	y = (pos.y + size.y - 1) / tileSize;
+	x1 = (pos.x + size.x + 1) / tileSize;
+	y = (pos.y + size.y + 1) / tileSize;
 	for(int x=x0; x<=x1; x++)
 	{
 		if(map[y*mapSize.x+x] != 0)
 		{
+
 			if(*posY - tileSize * y + size.y <= 4)
-			{
+			{	
 				*posY = tileSize * y - size.y;
 				return true;
 			}
@@ -205,7 +209,23 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	return false;
 }
 
+void TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size) {
+	int x0, x1, y;
 
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x +1 ) / tileSize;
+	y = (pos.y + size.y +1) / tileSize;
+	for (int x = x0; x <= x1; x++)
+	{
+		
+		if (map[y * mapSize.x + x] == 2)
+		{
+			map[y * mapSize.x + x] += 1;
+		}
+	}
+	reloadArrays();
+
+}
 bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const {
 	int x0, x1, y;
 
@@ -222,56 +242,27 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) con
 	return false;
 }
 
-bool TileMap::deadMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
+bool TileMap::deadMoveDown(const glm::ivec2& pos, const glm::ivec2& size) const
 {
+
 	int x0, x1, y;
 
 	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
-	y = (pos.y + size.y - 1) / tileSize;
+	x1 = (pos.x + size.x + 1) / tileSize;
+	y = (pos.y + size.y + 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
+
 		if (map[y * mapSize.x + x] == 4)
 		{
-			if (*posY - tileSize * y + size.y <= 4)
-			{
-				*posY = tileSize * y - size.y;
-				return true;
-			}
+			return true;
 		}
 	}
 
 	return false;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void TileMap::reloadArrays() {
+	prepareArrays(oldMinCoords, oldShader);
+}
 

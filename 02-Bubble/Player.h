@@ -18,12 +18,14 @@ public:
 	void update(int deltaTime);
 	void render();
 	
-	void setTileMap(TileMap *tileMap);
+	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 ret_size();
 	glm::vec2 ret_pos();
 	void hit();
 	int return_lifes(); 
+	bool checkHitFloor();
+	void touch();
 	
 private:
 	bool bJumping;

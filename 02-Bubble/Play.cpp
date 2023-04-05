@@ -135,6 +135,8 @@ void Play::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	
+	map->collisionMoveDown(glm::ivec2(player->ret_pos().x-22, player->ret_pos().y), glm::ivec2(player->ret_size().x - 10, player->ret_size().y));
+	
 	if (!immunitat) {
 		checkHits();
 	}
@@ -399,31 +401,29 @@ void Play::checkHits() {
 			}
 		}
 	}
-	
-	if (level == 1 || level == 3) {
-		if (player->ret_pos().y >= 25 * map->getTileSize() && player->ret_pos().x >= 14 * map->getTileSize() && player->ret_pos().x <= 25 * map->getTileSize()) {
-			--vides;
-			if (vides == 0) {
-				Game::instance().init(vides, 4);
+	if (player->checkHitFloor()) {
+		--vides;
+		if (vides == 0) {
+			Game::instance().init(vides, 4);
+		}
+		else {
+			
+			elementList.erase(elementList.end() - 1);
+			player = new Player();
+			player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+			if (level == 1) {
+				player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_1 * map->getTileSize(), INIT_PLAYER_Y_TILES_1 * map->getTileSize()));
+			}
+			else if (level == 2) {
+				player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_2 * map->getTileSize(), INIT_PLAYER_Y_TILES_2 * map->getTileSize()));
 			}
 			else {
-				elementList.erase(elementList.end() - 1);
-				player = new Player();
-				player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-				if (level == 1) {
-					player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_1 * map->getTileSize(), INIT_PLAYER_Y_TILES_1 * map->getTileSize()));
-				}
-				else if (level == 2) {
-					player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_2 * map->getTileSize(), INIT_PLAYER_Y_TILES_2 * map->getTileSize()));
-				}
-				else {
-					player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_3 * map->getTileSize(), INIT_PLAYER_Y_TILES_3 * map->getTileSize()));
-				}
-				player->setTileMap(map);
+				player->setPosition(glm::vec2(INIT_PLAYER_X_TILES_3 * map->getTileSize(), INIT_PLAYER_Y_TILES_3 * map->getTileSize()));
 			}
+			player->setTileMap(map);
 		}
+
 	}
-	
 
 }
 

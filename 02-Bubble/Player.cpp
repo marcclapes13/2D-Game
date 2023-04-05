@@ -52,6 +52,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
+
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
 		if(sprite->animation() != MOVE_LEFT)
@@ -108,6 +109,9 @@ void Player::update(int deltaTime)
 		posPlayer.y += FALL_STEP;
 		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
 		{
+			//map->collisionMoveDown(glm::ivec2(posPlayer.x+8, posPlayer.y+35), glm::ivec2(32,32));
+			//setTileMap(map);
+			
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
 				bJumping = true;
@@ -151,6 +155,15 @@ void Player::hit() {
 int Player::return_lifes() {
 	return lifes;
 }
+void Player::touch() {
+	map->collisionMoveDown(posPlayer, size);
 
+}
+
+bool Player::checkHitFloor() {
+	if (map->deadMoveDown(glm::ivec2(posPlayer.x, posPlayer.y), size))
+		return true;
+	return false;
+}
 
 
