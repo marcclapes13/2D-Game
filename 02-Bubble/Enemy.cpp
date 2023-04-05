@@ -75,7 +75,14 @@ void Enemy::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, Play
 
 		}
 		else if (lvl == 2) {
-
+			if (dir == 0) {
+				moveRight = true;
+				moveLeft = false;
+			}
+			else {
+				moveRight = false;
+				moveLeft = true;
+			}
 		}
 		else {
 			if (dir == 0) {
@@ -217,7 +224,35 @@ void Enemy::update(int deltaTime)
 		}
 	}
 	else if (lvl == 2) {
+		switch (typeofEnemy) {
+		case (PUÑETAZOS):
+			if (moveRight) {
+				if (!map->collisionMoveRight(glm::ivec2(posEnemy.x + 10, posEnemy.y), glm::ivec2(size.x, size.y)) && !map->collisionMoveDownEnemy(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y))) {
+					if (sprite->animation() != MOVE_RIGHT)
+						sprite->changeAnimation(MOVE_RIGHT);
+					posEnemy.x += 1;
+					cooldown--;
 
+				}
+				else {
+					moveRight = false;
+					moveLeft = true;
+				}
+			}
+			else if (moveLeft) {
+				if (!map->collisionMoveLeft(glm::ivec2(posEnemy.x, posEnemy.y), glm::ivec2(size.x, size.y)) && !map->collisionMoveDownEnemy(glm::ivec2(posEnemy.x - 1, posEnemy.y), glm::ivec2(size.x, size.y))) {
+					if (sprite->animation() != MOVE_LEFT)
+						sprite->changeAnimation(MOVE_LEFT);
+					posEnemy.x -= 1;
+					--cooldown;
+				}
+				else {
+					moveRight = true;
+					moveLeft = false;
+				}
+			}
+			break;
+		}
 	}
 	else {
 		switch (typeofEnemy) {

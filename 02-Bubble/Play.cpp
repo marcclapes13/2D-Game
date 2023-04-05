@@ -13,7 +13,7 @@
 #define INIT_PLAYER_Y_TILES_1 3
 
 #define INIT_PLAYER_X_TILES_2 8
-#define INIT_PLAYER_Y_TILES_2 3
+#define INIT_PLAYER_Y_TILES_2 7
 
 #define INIT_PLAYER_X_TILES_3 5
 #define INIT_PLAYER_Y_TILES_3 19
@@ -102,9 +102,7 @@ void Play::init(int i, int lives)
 		map = TileMap::createTileMap("levels/level03.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		break;
 	}
-	case 4:
-		player->setPosition(glm::vec2(50, 50));
-		break;
+
 	default:
 	{
 		std::cerr << "[PLAY::init] wrong level number" << std::endl;
@@ -242,6 +240,45 @@ void Play::initEnemies() {
 			enemyList.push_back(enemy_aux);
 		}
 	}
+	else if (level == 2) {
+		int number_of_enemies = 7;
+		for (int i = 0; i < number_of_enemies; ++i) {
+			int enemy_x;
+			int enemy_y;
+			int typeofEnemy;
+			int direccio;
+			switch (i + 1) { //enemy_list
+			case 1:
+				enemy_x = 8; enemy_y = 16; typeofEnemy = PUÑETAZOS, direccio = 0;
+				break;
+			case 2:
+				enemy_x = 26; enemy_y = 16; typeofEnemy = PUÑETAZOS, direccio = 1;
+				break;
+			case 3:
+				enemy_x = 8; enemy_y = 20; typeofEnemy = PUÑETAZOS, direccio = 0;
+				break;
+			case 4:
+				enemy_x = 16; enemy_y = 4; typeofEnemy = ARMADO, direccio = 1;
+				break;
+			case 5:
+				enemy_x = 18; enemy_y = 4; typeofEnemy = ARMADO, direccio = 0;
+				break;
+			case 6:
+				enemy_x = 2; enemy_y = 24; typeofEnemy = ARMADO, direccio = 0;
+				break;
+			case 7:
+				enemy_x = 32; enemy_y = 24; typeofEnemy = ARMADO, direccio = 1;
+				break;
+			}
+			Enemy* enemy_aux;
+			enemy_aux = new Enemy();
+			enemy_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, player, typeofEnemy, direccio, level, i, &bulletManager);
+			enemy_aux->setTileMap(map);
+			enemy_aux->setPosition(glm::vec2(enemy_x * map->getTileSize(), enemy_y * map->getTileSize()));
+			enemyList.push_back(enemy_aux);
+		}
+		
+	}
 	else if (level == 3) {
 		int number_of_enemies = 6; //cuantos enemigos hay en el nivel
 		for (int i = 0; i < number_of_enemies; ++i) {
@@ -286,7 +323,7 @@ void Play::initElements() {
 		for (int i = 0; i < num_elem; ++i) {
 			switch (i + 1) {
 			case 1:
-				despx = 25, despy = 5;
+				despx = 19, despy = 5;
 				break;
 			case 2:
 				despx = 2, despy = 0;
@@ -307,14 +344,45 @@ void Play::initElements() {
 			elementList.push_back(element_aux);
 		}
 	}
-	if (level == 3) {
+	if (level == 2) {
+		int despx = 25;
+		int despy = 5;
+		int num_elem = 1 + vides;
+		for (int i = 0; i < num_elem; ++i) {
+			switch (i + 1) {
+			case 1:
+				despx = 34, despy = 5;
+				break;
+			case 2:
+				despx = 2, despy = 0;
+				break;
+			case 3:
+				despx = 3, despy = 0;
+				break;
+			case 4:
+				despx = 4, despy = 0;
+				break;
+			
+			case 5: despx = 5, despy= 0;
+				break;
+			}
+
+			Elements* element_aux;
+			element_aux = new Elements();
+			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, i);
+			element_aux->setTileMap(map);
+			element_aux->setPosition(glm::vec2(despx * map->getTileSize(), despy * map->getTileSize()));
+			elementList.push_back(element_aux);
+		}
+	}
+	else if (level == 3) {
 		int despx = 25;
 		int despy = 5;
 		int num_elem = 1+vides;
 		for (int i = 0; i < num_elem; ++i) {
 			switch (i + 1) {
 			case 1:
-				despx = 25, despy = 5;
+				despx = 21, despy = 9;
 				break;
 			case 2:
 				despx = 2, despy = 0;
