@@ -244,9 +244,10 @@ inline void Scene::updateState()
 		}
 		else if (Game::instance().getKey((char)103)) //press g
 		{
+			Game::instance().keyReleased((char)109);
 			if (immune) immune = false;
 			else immune = true;
-			Game::instance().keyReleased((char)109);
+			
 			play->setImmunitat(immune);
 		}
 		else if (this->play->getLevel() == 1)
