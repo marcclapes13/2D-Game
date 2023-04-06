@@ -293,7 +293,7 @@ void Play::update(int deltaTime)
 			element_aux = new Elements();
 			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2);
 			element_aux->setTileMap(map);
-			element_aux->setPosition(glm::vec2(6 * map->getTileSize(), 0 * map->getTileSize()));
+			element_aux->setPosition(glm::vec2(6 * map->getTileSize(), -0.5 * map->getTileSize()));
 			elementList.insert(elementList.begin(), element_aux);
 			immunitat = true;
 			eliminat = true;
