@@ -39,6 +39,7 @@ public:
 	int getLives();
 	bool porta;
 	void addLives();
+	void initBackground();
 
 private:
 	void initShaders();
