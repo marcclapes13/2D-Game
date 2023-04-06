@@ -1,7 +1,6 @@
 #ifndef _SCENE_INCLUDE
 #define _SCENE_INCLUDE
 
-
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
 #include "TileMap.h"
@@ -32,6 +31,8 @@ public:
 	void render();
 	void setMenu();
 	void initPlay(int level, int lives);
+	void delay(int secs);
+
 private:
 	
 	
@@ -57,6 +58,10 @@ private:
 
 private:
 
+	int delta;
+	int enterCount;
+	bool porta_oberta;
+	int countEntry;
 	int level;
 	bool immune;
 	int lives;

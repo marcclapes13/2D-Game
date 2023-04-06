@@ -66,6 +66,8 @@ Play::~Play()
 
 void Play::init(int i, int lives)
 {
+	keyPressed = false;
+	countImm = 0;
 	agafat = false;
 	portaOberta = false;
 	porta = false;
@@ -151,88 +153,105 @@ void Play::update(int deltaTime)
 		checkHits();
 	}
 	checkBullets();
-	if (level == 1) {
-		if (!stop && map->retPintat() >= 45) {
-			Elements* element_aux;
-			element_aux = new Elements();
-			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1);
-			element_aux->setTileMap(map);
-			element_aux->setPosition(glm::vec2(19 * map->getTileSize(), 21 * map->getTileSize()));
-			elementList.insert(elementList.begin(), element_aux);
-			stop = true;
-			eliminat = false;
+	if (!keyPressed) {
+		if (level == 1) {
+			if (!stop && map->retPintat() >= 45) {
+				Elements* element_aux;
+				element_aux = new Elements();
+				element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1);
+				element_aux->setTileMap(map);
+				element_aux->setPosition(glm::vec2(19 * map->getTileSize(), 21 * map->getTileSize()));
+				elementList.insert(elementList.begin(), element_aux);
+				stop = true;
+				eliminat = false;
 
-		}
-		if ((map->retPintat() == 70 || map->retPintat() == 71 || map->retPintat() == 72) && !eliminat && !agafat) {
-			elementList.erase(elementList.begin());
-			eliminat = true;
-			countStop = 201;
-		}
-		
-		if (!key && map->retPintat() >= 114) {
-			Elements* element_aux;
-			element_aux = new Elements();
-			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0);
-			element_aux->setTileMap(map);
-			element_aux->setPosition(glm::vec2(19 * map->getTileSize(), 17 * map->getTileSize()));
-			elementList.insert(elementList.begin(), element_aux);
-			key = true;
-			eliminat = false;
-		}
-	}
-	else if (level == 2) {
-		if (!gema && map->retPintat() >= 30) {
-			Elements* element_aux;
-			element_aux = new Elements();
-			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3);
-			element_aux->setTileMap(map);
-			element_aux->setPosition(glm::vec2(13 * map->getTileSize(), 13 * map->getTileSize()));
-			elementList.insert(elementList.begin(), element_aux);
-			gema = true;
-			eliminat = false;
+			}
+			if ((map->retPintat() == 70 || map->retPintat() == 71 || map->retPintat() == 72) && !eliminat && !agafat) {
+				elementList.erase(elementList.begin());
+				eliminat = true;
+				countStop = 201;
+			}
 
+			if (!key && map->retPintat() >= 114) {
+				Elements* element_aux;
+				element_aux = new Elements();
+				element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0);
+				element_aux->setTileMap(map);
+				element_aux->setPosition(glm::vec2(19 * map->getTileSize(), 17 * map->getTileSize()));
+				elementList.insert(elementList.begin(), element_aux);
+				key = true;
+				eliminat = false;
+			}
 		}
-		if ((map->retPintat() == 50 || map->retPintat() == 51 || map->retPintat() == 52) && !eliminat) {
-			elementList.erase(elementList.begin());
-			eliminat = true;
+		else if (level == 2) {
+			if (!gema && map->retPintat() >= 50) {
+				Elements* element_aux;
+				element_aux = new Elements();
+				element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3);
+				element_aux->setTileMap(map);
+				element_aux->setPosition(glm::vec2(13 * map->getTileSize(), 13 * map->getTileSize()));
+				elementList.insert(elementList.begin(), element_aux);
+				gema = true;
+				eliminat = false;
+			}
+			if ((map->retPintat() == 70 || map->retPintat() == 71 || map->retPintat() == 72) && !eliminat) {
+				elementList.erase(elementList.begin());
+				eliminat = true;
+			}
+			if (!key && map->retPintat() >= 88) {
+				Elements* element_aux;
+				element_aux = new Elements();
+				element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0);
+				element_aux->setTileMap(map);
+				element_aux->setPosition(glm::vec2(4 * map->getTileSize(), 5 * map->getTileSize()));
+				elementList.insert(elementList.begin(), element_aux);
+				key = true;
+				eliminat = false;
+			}
 		}
-		if (!key && map->retPintat() >= 88) {
-			Elements* element_aux;
-			element_aux = new Elements();
-			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0);
-			element_aux->setTileMap(map);
-			element_aux->setPosition(glm::vec2(4 * map->getTileSize(), 5 * map->getTileSize()));
-			elementList.insert(elementList.begin(), element_aux);
-			key = true;
-			eliminat = false;
+		else {
+			if (!invulnerable && map->retPintat() >= 45 && countImm == 0) {
+				Elements* element_aux;
+				element_aux = new Elements();
+				element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2);
+				element_aux->setTileMap(map);
+				element_aux->setPosition(glm::vec2(13 * map->getTileSize(), 9 * map->getTileSize()));
+				elementList.insert(elementList.begin(), element_aux);
+				invulnerable = true;
+				eliminat = false;
+			}
+			if ((map->retPintat() == 70 || map->retPintat() == 71 || map->retPintat() == 72) && !eliminat) {
+				elementList.erase(elementList.begin());
+				eliminat = true;
+				countImm = 200;
+			}
+			if (!key && map->retPintat() >= 90) {
+				Elements* element_aux;
+				element_aux = new Elements();
+				element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0);
+				element_aux->setTileMap(map);
+				element_aux->setPosition(glm::vec2(8 * map->getTileSize(), 17 * map->getTileSize()));
+				elementList.insert(elementList.begin(), element_aux);
+				key = true;
+				eliminat = false;
+			}
 		}
 	}
 	else {
-		if (!invulnerable && map->retPintat() >= 45 ) {
-			Elements* element_aux;
-			element_aux = new Elements();
-			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2);
-			element_aux->setTileMap(map);
-			element_aux->setPosition(glm::vec2(13 * map->getTileSize(), 9 * map->getTileSize()));
-			elementList.insert(elementList.begin(), element_aux);
-			invulnerable = true;
-			eliminat = false;
-		}
-		if ((map->retPintat() == 70 || map->retPintat() == 71 || map->retPintat() == 72) && !eliminat) {
-			elementList.erase(elementList.begin());
-			eliminat = true;
-			countStop = 201;
-		}
-		if (!key && map->retPintat() >= 90) {
-			Elements* element_aux;
-			element_aux = new Elements();
-			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0);
-			element_aux->setTileMap(map);
-			element_aux->setPosition(glm::vec2(8 * map->getTileSize(), 17 * map->getTileSize()));
-			elementList.insert(elementList.begin(), element_aux);
-			key = true;
-			eliminat = false;
-		}
+		int key_x = 0;
+		int key_y = 0;
+		if (level == 1) key_x =19, key_y = 17;
+		else if (level == 2) key_x =4, key_y = 5;
+		else if (level == 3) key_x =8, key_y =17;
+		Elements* element_aux;
+		element_aux = new Elements();
+		element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0);
+		element_aux->setTileMap(map);
+		element_aux->setPosition(glm::vec2(key_x * map->getTileSize(), key_y * map->getTileSize()));
+		elementList.insert(elementList.begin(), element_aux);
+		key = true;
+		eliminat = false;
+		keyPressed = false;
 	}
 	for (int i = 0; i < int(elementList.size()); ++i)
 		elementList[i]->update(deltaTime);
@@ -262,13 +281,34 @@ void Play::update(int deltaTime)
 	gemmActive = touchGemm();
 	if (gemmActive && !eliminat) {
 		elementList.erase(elementList.begin());
-		
+		addLives();
 		eliminat = true;
 	}
-	
+	//touchImmortal
+	immortalActive = touchImmune();
+	if (immortalActive && invulnerable) {
+		if (countImm == 0) {
+			elementList.erase(elementList.begin());
+			Elements* element_aux;
+			element_aux = new Elements();
+			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2);
+			element_aux->setTileMap(map);
+			element_aux->setPosition(glm::vec2(6 * map->getTileSize(), 0 * map->getTileSize()));
+			elementList.insert(elementList.begin(), element_aux);
+			immunitat = true;
+			eliminat = true;
+		}
+	}
+	else if (immunitat) {
+		if (countImm == 200) {
+			elementList.erase(elementList.begin());
+			immunitat = false;
+		}
+		++countImm;
+	}
 	// touchKey
 	keyActive = touchKey();
-	if (keyActive && key) {
+	if ((keyActive || portaCoolDown > 0) && key) {
 		if (portaCoolDown == 0)
 			elementList.erase(elementList.begin());
 		else {
@@ -285,9 +325,7 @@ void Play::update(int deltaTime)
 				elementList[0]->update(deltaTime);
 			}
 		}
-		
 		++portaCoolDown;
-		
 	}
 	if (portaOberta) {
 		porta = checkPorta();
@@ -685,19 +723,19 @@ int Play::getLives() {
 }
 
 void Play::addLives() {
-	int despx;
+	int despx = 0;
 	int despy = 0;
-	if (getLives() < 3) {
-		if (getLives() == 1) despx = 3;
-		else if (getLives()) despx = 4;
-		Elements* element_aux;
-		element_aux = new Elements();
-		element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5);
-		element_aux->setTileMap(map);
-		element_aux->setPosition(glm::vec2(despx * map->getTileSize(), despy * map->getTileSize()));
-		elementList.push_back(element_aux);
-		++vides;
-	}
+	if (getLives() == 1) despx = 3;
+	else if (getLives() == 2) despx = 4;
+	else if (getLives() == 3) despx = 5;
+	Elements* element_aux;
+	element_aux = new Elements();
+	element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5);
+	element_aux->setTileMap(map);
+	element_aux->setPosition(glm::vec2(despx * map->getTileSize(), despy * map->getTileSize()));
+	elementList.push_back(element_aux);
+	++vides;
+	
 }
 
 void Play::setImmunitatFalse() {
@@ -708,7 +746,7 @@ void Play::setImmunitatTrue() {
 }
 
 bool Play::touchStop() {
-		if (stop && player->ret_pos().x >= 18 * map->getTileSize() && player->ret_pos().x <= 20 * map->getTileSize() && player->ret_pos().y >= 20 * map->getTileSize() && player->ret_pos().y <= 22 * map->getTileSize()) {
+	if (stop && player->ret_pos().x >= 18 * map->getTileSize() && player->ret_pos().x <= 20 * map->getTileSize() && player->ret_pos().y >= 20 * map->getTileSize() && player->ret_pos().y <= 22 * map->getTileSize()) {
 		return true;
 	}
 	return false;
@@ -739,7 +777,17 @@ bool Play::touchGemm() {
 	
 	if (level == 2) {
 		if (gema && player->ret_pos().x >= 12 * map->getTileSize() && player->ret_pos().x <= 14 * map->getTileSize() && player->ret_pos().y >= 12 * map->getTileSize() && player->ret_pos().y <= 14 * map->getTileSize()) {
-			if (getLives() < 3) addLives();
+			
+			return true;
+		}
+	}
+	return false;
+}
+bool Play::touchImmune() {
+
+	if (level == 3) {
+		if (invulnerable && player->ret_pos().x >= 12 * map->getTileSize() && player->ret_pos().x <= 14 * map->getTileSize() && player->ret_pos().y >= 8 * map->getTileSize() && player->ret_pos().y <= 10 * map->getTileSize()) {
+
 			return true;
 		}
 	}
@@ -749,7 +797,6 @@ bool Play::touchGemm() {
 bool Play::checkPorta() {
 	if (level == 1) {
 		if (player->ret_pos().x >= 18 * map->getTileSize() && player->ret_pos().x <= 20 * map->getTileSize() && player->ret_pos().y >= 4 * map->getTileSize() && player->ret_pos().y <= 6 * map->getTileSize()) {
-			
 			return true;
 		}
 	}
@@ -780,4 +827,28 @@ void Play::initBackground() {
 
 	spriteBackground->changeAnimation(0);
 	spriteBackground->setPosition(glm::vec2(0, 0));
+}
+
+void Play::setEntry(int count) {
+	if (elementList.size() != 0) {
+		if (count <= 15)
+			elementList[0]->setEntry1();
+		else if (count <= 30)
+			elementList[0]->setEntry2();
+		else if (count <= 45)
+			elementList[0]->setEntry3();
+		else if (count <= 60)
+			elementList[0]->setEntry4();
+		else if (count <= 75)
+			elementList[0]->setEntry5();
+		else if (count <= 90)
+			elementList[0]->setEntry6();
+		else if (count <= 105)
+			elementList[0]->setEntry7();
+		else if (count < 120)
+			elementList[0]->setEntry8();
+		else if (count == 120) {
+			elementList[0]->setPorta0();
+		}
+	}
 }

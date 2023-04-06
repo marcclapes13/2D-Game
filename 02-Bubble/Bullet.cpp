@@ -66,7 +66,7 @@ Bullet::~Bullet() {
 
 glm::vec2 Bullet::ret_pos() {
 	if (dir == 0)
-		return glm::vec2(posBullet.x+8, posBullet.y);
+		return glm::vec2(posBullet.x, posBullet.y);
 	else 
 		return glm::vec2(posBullet.x -8, posBullet.y);
 }

@@ -15,10 +15,20 @@ public:
 	glm::vec2 ret_pos();
 	glm::vec2 ret_size();
 
+	void setPorta0();
 	void setPorta1();
 	void setPorta2();
 	void setPorta3();
-
+	
+	void setEntry1();
+	void setEntry2();
+	void setEntry3(); 
+	void setEntry4();
+	void setEntry5();
+	void setEntry6();
+	void setEntry7();
+	void setEntry8();
+	
 private:
 	Texture spritesheet;
 	Sprite* sprite;

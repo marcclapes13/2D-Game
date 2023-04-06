@@ -1,6 +1,5 @@
 #include <iostream>
-#include <cmath>
-#include <ctime>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
@@ -30,6 +29,9 @@ void Scene::init(int vides, int estat, int lvl)
 {
 	level = lvl;
 	immune = false;
+	countEntry = 0;
+	porta_oberta = false;
+	enterCount = 0;
 	switch (estat) {
 	case 0:
 		this->state = Scene::State::MENU;
@@ -84,13 +86,42 @@ void Scene::init(int vides, int estat, int lvl)
 	}
 }
 
+void Scene::delay(int secs) {
+	for (int i = (time(NULL) + secs); time(NULL) != i; time(NULL));
+}
+
 void Scene::update(int deltaTime)
 {
-	if (play->porta && play->getLevel() != 3) {
-		initPlay(play->getLevel() + 1, play->getLives());
+	if ((play->porta || porta_oberta) && play->getLevel() != 3) {
+		if (play->player != NULL) {
+			play->player->setPosition(glm::ivec2(2000, 2000));;
+			porta_oberta = true;
+		}
+		if (countEntry <= 120) {
+			play->setEntry(countEntry);
+		}
+		else {
+			porta_oberta = false;
+			countEntry = 0;
+			initPlay(play->getLevel() + 1, play->getLives());
+		}
+		++countEntry;
 	}
-	else if (play->porta) {
-		Game::instance().init(3, 3);
+	else if (play->porta || porta_oberta) {
+		if (play->player != NULL) {
+			play->player->setPosition(glm::ivec2(2000, 2000));;
+			porta_oberta = true;
+		}
+		if (countEntry <= 120) {
+			play->setEntry(countEntry);
+		}
+		else {
+			porta_oberta = false;
+			countEntry = 0;
+			Game::instance().init(3, 3);
+		}
+		++countEntry;
+		
 	}
 	this->updateState();
 	switch (this->state)
@@ -258,6 +289,13 @@ inline void Scene::updateState() {
 			if (!immune) play->setImmunitatFalse();
 			else play->setImmunitatTrue();
 		}
+		else if (Game::instance().getKey((char)107))
+		{
+			Game::instance().keyReleased((char)107);
+			if (play->keyPressed == false)
+				play->keyPressed = true;
+		
+		}
 		else if (this->play->getLevel() == 1)
 			
 			{
@@ -344,23 +382,35 @@ inline void Scene::updateState() {
 			
 		}
 		else if (Game::instance().getKey(13)) {
-			glm::ivec2 cursorPos = menu->cursorPos();
-			if (cursorPos == glm::ivec2(220.f, 300.f)) {
-				Game::instance().keyReleased(13);
+			enterCount = 1;
+			Game::instance().keyReleased(13);
+		}
+		if (enterCount > 0) {
+			++enterCount;
+			if (enterCount < 30) {
 				menu->cursorSetSelect();
-				
-				this->state = Scene::State::PLAY;
-				this->initPlay(1, lives);
-			}
-			else if (cursorPos == glm::ivec2(220.f, 430.f)) {
-				Game::instance().keyReleased(13);
-				this->state = Scene::State::CONTR;
-				this->initContr();
 			}
 			else {
-				Game::instance().keyReleased(13);
-				this->state = Scene::State::CRED;
-				this->initCredits();
+				enterCount = 0;
+				glm::ivec2 cursorPos = menu->cursorPos();
+				if (cursorPos == glm::ivec2(220.f, 300.f)) {
+
+					menu->cursorSetSelect();
+
+					this->state = Scene::State::PLAY;
+					this->initPlay(1, lives);
+				}
+				else if (cursorPos == glm::ivec2(220.f, 430.f)) {
+					Game::instance().keyReleased(13);
+					this->state = Scene::State::CONTR;
+					this->initContr();
+				}
+				else {
+					Game::instance().keyReleased(13);
+					this->state = Scene::State::CRED;
+					this->initCredits();
+
+				}
 			}
 		}
 	}

@@ -56,8 +56,8 @@ void Elements::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, i
 	}
 	else if (element == 4) {
 		spritesheet.loadFromFile("images/Objectes/door.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.f, 0.25f), &spritesheet, &shaderProgram);
-		sprite->setNumberAnimations(4);
+		sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.33f, 0.25f), &spritesheet, &shaderProgram);
+		sprite->setNumberAnimations(12);
 		size.x = 50;
 		size.y = 45;
 		sprite->setAnimationSpeed(0, 6);
@@ -71,6 +71,30 @@ void Elements::init(const glm::vec2& tileMapPos, ShaderProgram& shaderProgram, i
 
 		sprite->setAnimationSpeed(3, 6);
 		sprite->addKeyframe(3, glm::vec2(0.0f, 0.75f));
+
+		sprite->setAnimationSpeed(4, 6);
+		sprite->addKeyframe(4, glm::vec2(0.33f, 0.0f));
+
+		sprite->setAnimationSpeed(5, 6);
+		sprite->addKeyframe(5, glm::vec2(0.33f, 0.25f));
+
+		sprite->setAnimationSpeed(6, 6);
+		sprite->addKeyframe(6, glm::vec2(0.33f, 0.5f));
+
+		sprite->setAnimationSpeed(7, 6);
+		sprite->addKeyframe(7, glm::vec2(0.33f, 0.75f));
+
+		sprite->setAnimationSpeed(8, 6);
+		sprite->addKeyframe(8, glm::vec2(0.66f, 0.0f));
+
+		sprite->setAnimationSpeed(9, 6);
+		sprite->addKeyframe(9, glm::vec2(0.66f, 0.25f));
+
+		sprite->setAnimationSpeed(10, 6);
+		sprite->addKeyframe(10, glm::vec2(0.66f, 0.5f));
+
+		sprite->setAnimationSpeed(11, 6);
+		sprite->addKeyframe(11, glm::vec2(0.66f, 0.75f));
 
 		sprite->changeAnimation(0);
 	}
@@ -123,6 +147,9 @@ void Elements::render()
 	sprite->render();
 }
 
+void Elements::setPorta0() {
+	sprite->changeAnimation(0);
+}
 void Elements::setPorta1() {
 	sprite->changeAnimation(1);
 }
@@ -131,4 +158,28 @@ void Elements::setPorta2() {
 }
 void Elements::setPorta3() {
 	sprite->changeAnimation(3);
+}
+void Elements::setEntry1() {
+	sprite->changeAnimation(4);
+}
+void Elements::setEntry2() {
+	sprite->changeAnimation(5);
+}
+void Elements::setEntry3() {
+	sprite->changeAnimation(6);
+}
+void Elements::setEntry4() {
+	sprite->changeAnimation(7);
+}
+void Elements::setEntry5() {
+	sprite->changeAnimation(8);
+}
+void Elements::setEntry6() {
+	sprite->changeAnimation(9);
+}
+void Elements::setEntry7() {
+	sprite->changeAnimation(10);
+}
+void Elements::setEntry8() {
+	sprite->changeAnimation(11);
 }

@@ -124,6 +124,7 @@ void Menu::cursorCredits() {
 glm::ivec2 Menu::cursorPos() {
 	return glm::ivec2(cursorPosition.x,cursorPosition.y);
 }
+
 void Menu::cursorSetSelect() {
 	cursor->changeAnimation(SELECT);
 	

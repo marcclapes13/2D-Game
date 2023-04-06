@@ -36,10 +36,14 @@ public:
 	
 	void setImmunitatFalse();
 	void setImmunitatTrue();
-	int getLives();
+	int  getLives();
 	bool porta;
 	void addLives();
 	void initBackground();
+
+	void setEntry(int count);
+	Player* player;
+	bool keyPressed;
 
 private:
 	void initShaders();
@@ -48,6 +52,7 @@ private:
 	bool touchStop();
 	bool touchKey();
 	bool touchGemm();
+	bool touchImmune();
 	bool checkPorta();
 	
 
@@ -58,16 +63,15 @@ private:
 	bool eliminat;
 	bool keyActive;
 	bool stopActive;
+	bool immortalActive;
 	int countStop;
+	int countImm;
 	int portaCoolDown;
 	bool key;
 	bool gema;
 	bool invulnerable;
 	bool stop;
 	bool immunitat;
-
-
-
 	bool gemmActive;
 
 	Play::State state;
@@ -76,7 +80,7 @@ private:
 	Level levels;
 	int level = 1;
 	TileMap* map;
-	Player* player;
+	
 	Enemy* enemy;
 	Enemy enemies;
 	Elements* element;
