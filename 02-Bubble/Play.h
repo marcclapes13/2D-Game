@@ -64,7 +64,11 @@ private:
 	bool invulnerable;
 	bool stop;
 	bool immunitat;
+
+
+
 	bool gemmActive;
+
 	Play::State state;
 	BulletManager bulletManager;
 	int vides;

@@ -59,8 +59,8 @@ Play::~Play()
 			elementList[i]-> ~Elements();
 	}
 	
-	//if (spriteBackground != NULL)
-		//delete spriteBackground;
+	if (spriteBackground != NULL)
+		delete spriteBackground;
 
 }
 
@@ -93,7 +93,7 @@ void Play::init(int i, int lives)
 		
 	level = i;
 	this->initShaders();
-
+	initBackground();
 	switch (level)
 	{
 	case 1:
@@ -144,7 +144,7 @@ void Play::init(int i, int lives)
 void Play::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	
+	spriteBackground->update(deltaTime);
 	map->collisionMoveDown(glm::ivec2(player->ret_pos().x-22, player->ret_pos().y), glm::ivec2(player->ret_size().x - 10, player->ret_size().y));
 	
 	if (!immunitat) {
@@ -208,7 +208,7 @@ void Play::update(int deltaTime)
 		}
 	}
 	else {
-		if (!invulnerable && map->retPintat() >= 45) {
+		if (!invulnerable && map->retPintat() >= 45 ) {
 			Elements* element_aux;
 			element_aux = new Elements();
 			element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2);
@@ -260,8 +260,10 @@ void Play::update(int deltaTime)
 	}
 	//touchGemm
 	gemmActive = touchGemm();
-	if (gemmActive && gema) {
-		//elementList.erase(elementList.begin());
+	if (gemmActive && !eliminat) {
+		elementList.erase(elementList.begin());
+		
+		eliminat = true;
 	}
 	
 	// touchKey
@@ -304,13 +306,15 @@ void Play::render()
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	spriteBackground->render();
 	map->render();
-	player->render();
 
 	for (int i = 0; i < int(elementList.size()); ++i)
 		elementList[i]->render();
 	for (int i = 0; i < int(enemyList.size()); ++i)
 		enemyList[i]->render();
+	player->render();
+
 }
 
 void Play::initShaders()
@@ -676,11 +680,24 @@ void Play::checkBullets() {
 }
 
 int Play::getLives() {
+
 	return vides;
 }
 
 void Play::addLives() {
-	 ++vides;
+	int despx;
+	int despy = 0;
+	if (getLives() < 3) {
+		if (getLives() == 1) despx = 3;
+		else if (getLives()) despx = 4;
+		Elements* element_aux;
+		element_aux = new Elements();
+		element_aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5);
+		element_aux->setTileMap(map);
+		element_aux->setPosition(glm::vec2(despx * map->getTileSize(), despy * map->getTileSize()));
+		elementList.push_back(element_aux);
+		++vides;
+	}
 }
 
 void Play::setImmunitatFalse() {
@@ -722,7 +739,7 @@ bool Play::touchGemm() {
 	
 	if (level == 2) {
 		if (gema && player->ret_pos().x >= 12 * map->getTileSize() && player->ret_pos().x <= 14 * map->getTileSize() && player->ret_pos().y >= 12 * map->getTileSize() && player->ret_pos().y <= 14 * map->getTileSize()) {
-			//if (getLives() < 3) addLives();
+			if (getLives() < 3) addLives();
 			return true;
 		}
 	}
@@ -749,4 +766,18 @@ bool Play::checkPorta() {
 		}
 	}
 	return false;
+}
+
+void Play::initBackground() {
+	textureBackground.loadFromFile("images/back.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	
+	spriteBackground = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.0, 1.0), &textureBackground, &texProgram);
+
+	spriteBackground->setNumberAnimations(1);
+
+	spriteBackground->setAnimationSpeed(0, 8);
+	spriteBackground->addKeyframe(0, glm::vec2(0.f, 0.f));
+
+	spriteBackground->changeAnimation(0);
+	spriteBackground->setPosition(glm::vec2(0, 0));
 }
