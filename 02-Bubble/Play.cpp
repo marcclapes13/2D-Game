@@ -268,8 +268,10 @@ void Play::update(int deltaTime)
 	}
 	else {
 		++countStop;
-		if (countStop == 1)
+		if (countStop == 1) {
 			elementList.erase(elementList.begin());
+			agafat = true;
+		}
 			
 		if (countStop > 200) {
 			stopActive = false;
