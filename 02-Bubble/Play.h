@@ -38,6 +38,7 @@ public:
 	void setImmunitatTrue();
 	int getLives();
 	bool porta;
+	void addLives();
 
 private:
 	void initShaders();
@@ -45,6 +46,7 @@ private:
 	void checkBullets();
 	bool touchStop();
 	bool touchKey();
+	bool touchGemm();
 	bool checkPorta();
 	
 
@@ -62,6 +64,7 @@ private:
 	bool invulnerable;
 	bool stop;
 	bool immunitat;
+	bool gemmActive;
 	Play::State state;
 	BulletManager bulletManager;
 	int vides;

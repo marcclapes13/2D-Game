@@ -75,6 +75,7 @@ void Play::init(int i, int lives)
 	countStop = 0;
 	key = false;
 	gema = false;
+	gemmActive = false;
 	stop = false;
 	invulnerable = false;
 	immunitat = false;
@@ -257,6 +258,12 @@ void Play::update(int deltaTime)
 			agafat = true;
 		}
 	}
+	//touchGemm
+	gemmActive = touchGemm();
+	if (gemmActive && gema) {
+		//elementList.erase(elementList.begin());
+	}
+	
 	// touchKey
 	keyActive = touchKey();
 	if (keyActive && key) {
@@ -672,6 +679,10 @@ int Play::getLives() {
 	return vides;
 }
 
+void Play::addLives() {
+	 ++vides;
+}
+
 void Play::setImmunitatFalse() {
 	immunitat = false;
 }
@@ -706,6 +717,18 @@ bool Play::touchKey() {
 	}
 	return false;
 }
+
+bool Play::touchGemm() {
+	
+	if (level == 2) {
+		if (gema && player->ret_pos().x >= 12 * map->getTileSize() && player->ret_pos().x <= 14 * map->getTileSize() && player->ret_pos().y >= 12 * map->getTileSize() && player->ret_pos().y <= 14 * map->getTileSize()) {
+			//if (getLives() < 3) addLives();
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Play::checkPorta() {
 	if (level == 1) {
 		if (player->ret_pos().x >= 18 * map->getTileSize() && player->ret_pos().x <= 20 * map->getTileSize() && player->ret_pos().y >= 4 * map->getTileSize() && player->ret_pos().y <= 6 * map->getTileSize()) {
